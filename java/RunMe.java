@@ -42,6 +42,11 @@ public final class RunMe {
         flag14(password);
         flag15(password);
         flag16(password);
+        flag17(password);
+        flag18(password);
+        flag19(password);
+        flag20(password);
+        flag21(password);
     }
 
     private static void flag0(final byte[] password) {
@@ -232,7 +237,6 @@ public final class RunMe {
 
     private static void flag15(final byte[] password) {
         // REDACTED
-        print(15, 5534753422343243423L + password[2], password);
     }
 
 
@@ -258,6 +262,116 @@ public final class RunMe {
 
     /* package-private */ static int flag16Result(byte[] a) {
         return (a[0] + " " + a[1] + " " + a[2]).hashCode();
+    }
+
+
+    /**
+     * Original idea by Alexei Shishkin.
+     */
+    private static void flag17(final byte[] password) {
+        final int n = Math.abs(getInt(password) % 2026) + 2026;
+        print(17, calc17(n), password);
+    }
+
+    /**
+     * Write me
+     * <pre>
+     *          0: iconst_0
+     *          1: istore_1
+     *          2: iload_1
+     *          3: iload_1
+     *          4: imul
+     *          5: sipush        2026
+     *          8: idiv
+     *          9: iload_0
+     *         10: iadd
+     *         11: sipush        10000
+     *         14: if_icmpge     23
+     *         17: iinc          1, 1
+     *         20: goto          2
+     *         23: iload_1
+     *         24: ireturn
+     * </pre>
+     */
+    private static int calc17(final int n) {
+        return n;
+    }
+
+
+    private static void flag18(final byte[] password) {
+        final int n = 2026 + getInt(password) % 2026;
+        // Find the number of factors of n! modulo PRIME
+        final int factors = 0;
+        if (factors != 0) {
+            print(18, factors, password);
+        }
+    }
+
+
+    private static void flag19(final byte[] password) {
+        // Let n = 2026e26 + abs(getInt(password)).
+        // Consider the sequence of numbers (n + i) ** 2.
+        // Instead of each number, we write the number that is obtained from it by discarding the last 26 digits.
+        // How many of the first numbers of the resulting sequence will form an arithmetic progression?
+        final long result = 0;
+        if (result != 0) {
+            print(19, result, password);
+        }
+    }
+
+
+    /**
+     * Original idea by Dmitrii Liapin.
+     */
+    private static void flag20(final byte[] password) {
+        final Collection<Long> longs = new Random(getInt(password)).longs(2026_000)
+                .map(n -> n % 1000)
+                .boxed()
+                .collect(Collectors.toCollection(LinkedList::new));
+
+        // Calculate the number of objects (recursively) accessible by "longs" reference.
+        final int result = 0;
+
+        if (result != 0) {
+            print(20, result, password);
+        }
+    }
+
+
+    /**
+     * Original idea and implementation Igor Panasyuk.
+     */
+    private static void flag21(final byte[] password) {
+        record Pair(int x, int y) {
+        }
+
+        final List<Object> items = new ArrayList<>(Arrays.asList(
+                Byte.toUnsignedInt(password[0]),
+                (long) getInt(password),
+                new Pair(password[1], password[2]),
+                "Java SE 21 " + Arrays.toString(password)
+        ));
+
+        for (int round = 0; round < 10; round++) {
+            for (final Object item : List.copyOf(items)) {
+                // TODO: complete the switch expression using Java 21 features:
+                // items.add(
+                //     case Integer i -> square of i as long
+                //     case Long l and l is even -> l ^ 0x21L
+                //     case Long l and l is odd  -> -l
+                //     case Pair(int x, int y) -> x << 8 ^ y
+                //     case String s -> s.hashCode()
+                //     default -> 0
+                // );
+            }
+        }
+
+        long result = 0;
+        for (final Object item : items) {
+            result = result * 17 + item.toString().hashCode();
+        }
+
+        print(21, result, password);
     }
 
 
