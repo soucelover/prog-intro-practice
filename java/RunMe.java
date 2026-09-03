@@ -47,6 +47,7 @@ public final class RunMe {
         flag19(password);
         flag20(password);
         flag21(password);
+        flag22(password);
     }
 
     private static void flag0(final byte[] password) {
@@ -372,6 +373,48 @@ public final class RunMe {
         }
 
         print(21, result, password);
+    }
+
+
+    /**
+     * Is your Java modern enough? 
+     */
+    private static void flag22(final byte[] password) {
+        int result = 0;
+//        abstract value class Point {
+//            final int x;
+//            final int y;
+//
+//            public Point(int x, int y) {
+//                this.x = x;
+//                this.y = y;
+//            }
+//        }
+//
+//        value class Point2 extends Point {
+//            Point2(int x, int y) {
+//                super(10, 20);
+//            }
+//        }
+//
+//        value class Point3 extends Point {
+//            final int z;
+//
+//            Point3(int x, int y) {
+//                z = x * y;
+//                super(x, y);
+//            }
+//        }
+//
+//        var p2 = new Point2(password[0], password[1]);
+//        var p3 = new Point3(password[2], password[3]);
+//        for (int i = 0; i < 1000 + password[4] + password[5]; i++) {
+//            p2 = new Point2(p2.x + p3.z, p2.y + p3.z);
+//            p3 = new Point3(p3.x + p3.z, p3.z + p3.z);
+//        }
+//        result = p2.x ^ p2.y ^ p3.x ^ p3.y ^ p3.z;
+
+        print(22, result, password);
     }
 
 
