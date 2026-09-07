@@ -419,9 +419,9 @@ public final class RunMe {
     }
 
 
-    /*
+    /**
      * Once again, the documentation turns out to be very useful!
-     *
+     * <p>
      * Original idea Ivan Gorobets.
      */
     private static void flag23(final byte[] password) {
@@ -433,6 +433,23 @@ public final class RunMe {
         }
 
         print(23, result, password);
+    }
+
+
+    /**
+     * Original idea Ivan Gorobets.
+     */
+    private static void flag24(final byte[] password) {
+        final BigInteger n = new BigInteger("73102acaa9b83688a52b4722c902e59a83bd94e8044b4257bbdf2b71f94186abde99e2833b60dcaf94eb737a8de77001b48f45b01c6dad65ba6e296c6bade4999a069bbc9dcad87a99c93c4b85902b3418765237c7a2c8664f8079dfcfc2da9a4b72ef73dfac30ed28dfe16779e689f510e4b64b27e69abec921beddbf044379", 16);
+        final BigInteger d = new BigInteger("2c89f0a00bb25f11cb9b849aa22aff75a495c81515168ac1f20982a964489476c0f38ee872a073e824375bf12f1ac7639ad562b0641531dc475167f4f1f6968512f8ed86424db6463b013b3652ae7b77d55d494c004e6a35a93e18268a950752752e3a3c9fdd9d7f7092f8b8c11d7f4a1f07270cc7b5f92db05ac5147c840c81", 16);
+        // Find me
+        final BigInteger e = new BigInteger("1", 16);
+
+        final BigInteger b = new BigInteger("5d7e2c071eb993fe1abef31605b1ce50d7a02e07a386844337af7fb3e500d4db3e67d60879c520f9e0a4aa80fe406547fbb79db398b32493e54839f480eed0add2e5a771920170d766876529f01f45297c20a364beeddb7d2fe879b224c0129d444ebd7dca2bb98c4a3070fff6860027d9080373c7f059adc5495254f8ad8d78", 16);
+        final BigInteger r = BigInteger.valueOf(2026_000_000L + getInt(password));
+        final BigInteger encrypted = b.multiply(r.modPow(d, n)).mod(n);
+        final BigInteger decrypted = encrypted.modPow(e, n);
+        print(24, decrypted.hashCode(), password);
     }
 
 
