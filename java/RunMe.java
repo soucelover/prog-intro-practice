@@ -48,6 +48,7 @@ public final class RunMe {
         flag20(password);
         flag21(password);
         flag22(password);
+        flag23(password);
     }
 
     private static void flag0(final byte[] password) {
@@ -415,6 +416,23 @@ public final class RunMe {
 //        result = p2.x ^ p2.y ^ p3.x ^ p3.y ^ p3.z;
 
         print(22, result, password);
+    }
+
+
+    /*
+     * Once again, the documentation turns out to be very useful!
+     *
+     * Original idea Ivan Gorobets.
+     */
+    private static void flag23(final byte[] password) {
+        final Random random = new Random(getInt(password));
+
+        long result = 0;
+        for (long i = 0; i < 2026_000_000_000_000_000L; i++) {
+            result = random.nextLong();
+        }
+
+        print(23, result, password);
     }
 
 
