@@ -189,12 +189,16 @@ public final class RunMe {
     private static final int SMALL_REPEAT_COUNT = 12_345_678;
 
     private static void flag9(final byte[] password) {
-        String repeated = "";
-        for (int i = 0; i < SMALL_REPEAT_COUNT; i++) {
-            repeated += PATTERN;
+        // Compute (PATTERN * SMALL_REPEAT_COUNT).hash_code()
+        int hash = 0;
+
+        for (int i = 0; i < SMALL_REPEAT_COUNT; ++i) {
+            for (int j = 0; j < PATTERN.length(); ++j) {
+                hash = (hash * 31) + PATTERN.charAt(j);
+            }
         }
 
-        print(9, repeated.hashCode(), password);
+        print(9, hash, password);
     }
 
     private static final long LARGE_REPEAT_SHIFT = 28;
