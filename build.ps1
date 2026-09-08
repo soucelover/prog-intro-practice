@@ -1,8 +1,10 @@
+# PowerShell 7.0 is recommended
+
 $ErrorActionPreference = "Stop"
 Set-StrictMode -Version Latest
 $PSNativeCommandUseErrorActionPreference = $true
 
-Remove-Item -Path ".\bin\*" -Recurse -Force
+Remove-Item -Path ".\bin\*" -Recurse -Force -ErrorAction SilentlyContinue
 
 javac -d bin (Get-ChildItem -Path ".\src" -Filter "*.java" -Recurse -File)
 Copy-Item ".\src\manifest.txt" ".\bin\"
