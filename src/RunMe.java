@@ -27,10 +27,10 @@ public final class RunMe {
         final byte[] password = parseArgs(args);
 
         // flag0(password);
-        // System.out.println("The first flag was low-hanging fruit, can you find
-        // others?");
-        // System.out.println("Try to read, understand and modify code in flagX(...)
-        // functions");
+        // System.out.println(
+        // "The first flag was low-hanging fruit, can you find others?");
+        // System.out.println(
+        // "Try to read, understand and modify code in flagX(...) functions");
 
         // flag1(password);
         // flag2(password);
@@ -38,15 +38,15 @@ public final class RunMe {
         // flag4(password);
         // flag5(password);
         // flag6(password);
-        flag9(password);
-        flag15(password);
-        flag7(password);
-        flag8(password);
+        // flag7(password);
+        // flag8(password);
+        // flag9(password);
         flag10(password);
         // flag11(password);
         flag12(password);
         flag13(password);
         flag14(password);
+        flag15(password);
         flag16(password);
         flag17(password);
         flag18(password);
@@ -136,10 +136,9 @@ public final class RunMe {
         // The plural form of the most frequent noun
         final String plural = "characters";
         // The total number of occurrences (both singular and plural)
-        final int total = 117 + 121;
-        if (total != 0) {
-            print(7, (singular + ":" + plural + ":" + total).hashCode(), password);
-        }
+        final int total = 125 + 124;
+
+        print(7, (singular + ":" + plural + ":" + total).hashCode(), password);
     }
 
     private static void flag8(final byte[] password) {
