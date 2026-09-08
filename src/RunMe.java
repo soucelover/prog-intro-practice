@@ -41,7 +41,7 @@ public final class RunMe {
         // flag7(password);
         // flag8(password);
         // flag9(password);
-        flag10(password);
+        // flag10(password);
         // flag11(password);
         flag12(password);
         flag13(password);
@@ -189,12 +189,15 @@ public final class RunMe {
 
     private static void flag9(final byte[] password) {
         // Compute (PATTERN * SMALL_REPEAT_COUNT).hash_code()
+        final int single_hash = PATTERN.hashCode();
         int hash = 0;
 
         for (int i = 0; i < SMALL_REPEAT_COUNT; ++i) {
             for (int j = 0; j < PATTERN.length(); ++j) {
-                hash = (hash * 31) + PATTERN.charAt(j);
+                hash *= 31;
             }
+
+            hash += single_hash;
         }
 
         print(9, hash, password);
@@ -204,12 +207,31 @@ public final class RunMe {
     private static final long LARGE_REPEAT_COUNT = 1L << LARGE_REPEAT_SHIFT;
 
     private static void flag10(final byte[] password) {
-        String repeated = "";
-        for (long i = 0; i < LARGE_REPEAT_COUNT; i++) {
-            repeated += PATTERN;
+        // LARGE_REPEAT_COUNT is a power of two, so...
+        int hash = PATTERN.hashCode();
+        final long shift = pow31(PATTERN.length());
+
+        for (long i = 1; i < LARGE_REPEAT_COUNT; i <<= 1) {
+            hash = hash * pow31(PATTERN.length() * i) + hash;
         }
 
-        print(10, repeated.hashCode(), password);
+        print(10, hash, password);
+    }
+
+    private static int pow31(final long exp) {
+        int result = 1;
+        long n = exp;
+
+        while (n > 0) {
+            if ((n & 1) != 0) {
+                result *= 31;
+            }
+
+            result *= result;
+            n >>= 1;
+        }
+
+        return result;
     }
 
     private static void flag11(final byte[] password) {
