@@ -8,6 +8,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import java.net.URL;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
 
 /**
  * Run this code with provided arguments.
@@ -143,10 +146,43 @@ public final class RunMe {
         // Count the number of bluish (#005162) pixels of this image:
         // https://www.oracle.com/a/pr/img/rc24-java-26.jpg
 
-        final int number = 0;
-        if (number != 0) {
-            print(8, number, password);
+        BufferedImage image;
+
+        try {
+            URL url = new URL("https://www.oracle.com/a/pr/img/rc24-java-26.jpg");
+
+            image = ImageIO.read(url);
+
+        } catch (Exception e) {
+            System.err.println("Couldn't download the image: " + e.getMessage());
+            e.printStackTrace();
+            return;
         }
+
+        if (image == null) {
+            System.out.println("Failed to decode image: Format not supported by ImageIO.");
+            return;
+        }
+
+        final int width = image.getWidth();
+        final int height = image.getHeight();
+        int total = 0;
+
+        for (int x = 0; x < width; ++x) {
+            for (int y = 0; y < height; ++y) {
+                int rgb = image.getRGB(x, y);
+
+                int red = (rgb >> 16) & 0xff;
+                int green = (rgb >> 8) & 0xff;
+                int blue = rgb & 0xff;
+
+                if (red == 0x00 && green == 0x51 && blue == 0x62) {
+                    ++total;
+                }
+            }
+        }
+
+        print(8, total, password);
     }
 
     private static final String PATTERN = "You might be surprised how helpful the documentation can be!";
