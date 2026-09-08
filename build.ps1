@@ -1,7 +1,8 @@
 # PowerShell 7.0 is recommended
 
 param (
-    [String]$Name = "HelloWorld"
+    [String]$Name = "HelloWorld",
+    [String]$Class
 )
 
 $ErrorActionPreference = "Stop"
@@ -20,4 +21,9 @@ jar cvfm .\$Name.jar .\MANIFEST.MF (Get-ChildItem -Filter "*.class" -Recurse -Fi
 Pop-Location
 
 Write-Host "`nLaunching the application..."
-java -jar .\bin\$Name.jar
+
+if ($Class -eq "") {
+    java -jar .\bin\$Name.jar
+} else {
+    java --class-path .\bin\$Name.jar $Class
+}
