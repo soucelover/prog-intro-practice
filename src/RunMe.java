@@ -47,7 +47,7 @@ public final class RunMe {
         // flag13(password);
         flag14(password);
         // flag15(password);
-        flag16(password);
+        // flag16(password);
         flag17(password);
         flag18(password);
         flag19(password);
@@ -294,20 +294,24 @@ public final class RunMe {
                 (byte) (password[2] + password[5])
         };
 
-        for (long i = 1_000_000_000_000_000_000L + getInt(password); i >= 0; i--) {
+        long iterations = 1_000_000_000_000_000_000L + getInt(password);
+
+        for (int i = 0; i < 3; ++i, --iterations) {
             flag16Update(a);
         }
+
+        a[2] += a[0] * (iterations + 1);
 
         print(16, flag16Result(a), password);
     }
 
-    /* package-private */ static void flag16Update(byte[] a) {
+    static void flag16Update(byte[] a) {
         a[0] ^= a[1];
         a[1] -= a[1] * a[2];
         a[2] += a[0];
     }
 
-    /* package-private */ static int flag16Result(byte[] a) {
+    static int flag16Result(byte[] a) {
         return (a[0] + " " + a[1] + " " + a[2]).hashCode();
     }
 
