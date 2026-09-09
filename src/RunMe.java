@@ -239,13 +239,20 @@ public final class RunMe {
     }
 
     private static void flag12(final byte[] password) {
-        final BigInteger year = BigInteger.valueOf(-2026);
-        final BigInteger term = BigInteger.valueOf(PRIME + Math.abs(getInt(password)) % PRIME);
+        final long year = -2026;
+        final long term = PRIME + Math.abs(getInt(password)) % PRIME;
 
-        final long result = Stream.iterate(BigInteger.ZERO, BigInteger.ONE::add)
-                .filter(i -> year.multiply(i).add(term).multiply(i).compareTo(BigInteger.TEN) > 0)
-                .mapToLong(i -> i.longValue() * password[i.intValue() % password.length])
-                .sum();
+        long result = 0;
+
+        for (long i = 1; true; i++) {
+            final long value = (year * i + term) * i;
+
+            if (value <= 10) {
+                break;
+            }
+
+            result += i * password[(int) (i % password.length)];
+        }
 
         print(12, result, password);
     }
