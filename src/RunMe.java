@@ -46,7 +46,7 @@ public final class RunMe {
         // flag12(password);
         // flag13(password);
         flag14(password);
-        flag15(password);
+        // flag15(password);
         flag16(password);
         flag17(password);
         flag18(password);
@@ -284,6 +284,7 @@ public final class RunMe {
 
     private static void flag15(final byte[] password) {
         // REDACTED
+        print(15, 5534753422343243423L + password[2], password);
     }
 
     private static void flag16(final byte[] password) {
