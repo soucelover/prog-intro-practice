@@ -43,8 +43,8 @@ public final class RunMe {
         // flag9(password);
         // flag10(password);
         // flag11(password);
-        flag12(password);
-        flag13(password);
+        // flag12(password);
+        // flag13(password);
         flag14(password);
         flag15(password);
         flag16(password);
@@ -260,19 +260,13 @@ public final class RunMe {
     private static final long MAX_DEPTH = 100_000_000L;
 
     private static void flag13(final byte[] password) {
-        try {
-            flag13(password, 0, 0);
-        } catch (final StackOverflowError e) {
-            System.err.println("Stack overflow :((");
-        }
-    }
+        long result = 0;
 
-    private static void flag13(final byte[] password, final long depth, final long result) {
-        if (depth < MAX_DEPTH) {
-            flag13(password, depth + 1, (result ^ PRIME) | (result << 3) + depth * 7);
-        } else {
-            print(13, result, password);
+        for (int i = 0; i < MAX_DEPTH; ++i) {
+            result = (result ^ PRIME) | (result << 3) + i * 7;
         }
+
+        print(13, result, password);
     }
 
     private static void flag14(final byte[] password) {
