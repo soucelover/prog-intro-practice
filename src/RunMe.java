@@ -5,6 +5,7 @@ import java.security.NoSuchAlgorithmException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -50,7 +51,7 @@ public final class RunMe {
         // flag16(password);
         // flag17(password);
         // flag18(password);
-        flag19(password);
+        // flag19(password);
         flag20(password);
         // flag21(password);
         // flag22(password);
@@ -419,7 +420,13 @@ public final class RunMe {
         // discarding the last 26 digits.
         // How many of the first numbers of the resulting sequence will form an
         // arithmetic progression?
-        final long result = 0;
+        long result = 0;
+        final BigInteger div = BigInteger.TEN.pow(26);
+        final BigInteger term = BigInteger.valueOf(getInt(password)).abs();
+
+        final BigInteger i = div.sqrt().subtract(term);
+        result = i.longValue();
+
         if (result != 0) {
             print(19, result, password);
         }
@@ -459,7 +466,7 @@ public final class RunMe {
         for (int round = 0; round < 10; round++) {
             for (final Object item : List.copyOf(items)) {
                 items.add(switch (item) {
-                    case Integer i -> (long)i * (long)i;
+                    case Integer i -> (long) i * (long) i;
                     case Long l when l % 2 == 0 -> l ^ 0x21L;
                     case Long l -> -l;
                     case Pair(int x, int y) -> x << 8 ^ y;
