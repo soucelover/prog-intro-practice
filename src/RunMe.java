@@ -48,7 +48,7 @@ public final class RunMe {
         flag14(password);
         // flag15(password);
         // flag16(password);
-        flag17(password);
+        // flag17(password);
         flag18(password);
         flag19(password);
         flag20(password);
@@ -345,7 +345,13 @@ public final class RunMe {
      * </pre>
      */
     private static int calc17(final int n) {
-        return n;
+        int i = 0;
+
+        while (i * i / 2026 + n < 10_000) {
+            ++i;
+        }
+
+        return i;
     }
 
     private static void flag18(final byte[] password) {
