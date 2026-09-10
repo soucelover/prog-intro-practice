@@ -54,7 +54,7 @@ public final class RunMe {
         flag20(password);
         flag21(password);
         // flag22(password);
-        flag23(password);
+        // flag23(password);
     }
 
     private static void flag0(final byte[] password) {
@@ -524,13 +524,71 @@ public final class RunMe {
      * <p>
      * Original idea Ivan Gorobets.
      */
+    private static final long multiplier = 0x5DEECE66DL;
+    private static final long addend = 0xBL;
+    private static final long mask = (1L << 48) - 1;
+
+    private static long advance(final long state, final long steps) {
+        long a = multiplier;
+        long c = addend;
+
+        long mul = 1;
+        long add = 0;
+
+        for (long i = steps; i != 0; i >>= 1) {
+            if ((i & 1) != 0) {
+                add = (add * a + c) & mask;
+                mul = (mul * a) & mask;
+            }
+
+            c = (c * (a + 1)) & mask;
+            a = (a * a) & mask;
+        }
+
+        return (mul * state + add) & mask;
+    }
+
+    private static void test23() {
+        final long seed = 5;
+        for (int n = 1; n < (1 << 15); ++n) {
+            Random random = new Random(seed);
+            long expected = 0;
+
+            for (int i = 0; i < n; ++i) {
+                expected = random.nextLong();
+            }
+
+            long state = (seed ^ multiplier) & mask;
+            state = advance(state, 2 * n - 1);
+            final long high = state >> 16;
+
+            state = (state * multiplier + addend) & mask;
+            final long low = state >> 16;
+
+            long result = (high << 32) + (int) low;
+
+            if (result != expected) {
+                System.out.println("Broke at n = " + n);
+            }
+        }
+    }
+
     private static void flag23(final byte[] password) {
-        final Random random = new Random(getInt(password));
+        final long seed = getInt(password);
 
         long result = 0;
-        for (long i = 0; i < 2026_000_000_000_000_000L; i++) {
-            result = random.nextLong();
-        }
+        long n = 2026_000_000_000_000_000L;
+        n %= (1L << 47);
+
+        long state = (seed ^ multiplier) & mask;
+
+        state = advance(state, 2 * n - 1);
+        final long high = state >> 16;
+
+        state = (state * multiplier + addend) & mask;
+        final long low = state >> 16;
+
+        result = (high << 32) + (int) low;
 
         print(23, result, password);
     }
