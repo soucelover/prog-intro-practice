@@ -49,7 +49,7 @@ public final class RunMe {
         // flag15(password);
         // flag16(password);
         // flag17(password);
-        flag18(password);
+        // flag18(password);
         flag19(password);
         flag20(password);
         flag21(password);
@@ -357,10 +357,59 @@ public final class RunMe {
     private static void flag18(final byte[] password) {
         final int n = 2026 + getInt(password) % 2026;
         // Find the number of factors of n! modulo PRIME
-        final int factors = 0;
-        if (factors != 0) {
-            print(18, factors, password);
+        final int factors = factorial_factors(n);
+        print(18, factors, password);
+    }
+
+    private static List<Integer> find_primes(final int upper_bound) {
+        List<Integer> primes = new ArrayList<Integer>();
+
+        primes.add(2);
+
+        for (int number = 3; number <= upper_bound; ++number) {
+            boolean is_prime = true;
+
+            for (int prime : primes) {
+                if (number % prime == 0) {
+                    is_prime = false;
+                    break;
+                }
+            }
+
+            if (is_prime) {
+                primes.add(number);
+            }
         }
+
+        return primes;
+    }
+
+    private static int factorial_factors(final int n) {
+        List<Integer> primes = find_primes((int) Math.ceil(n));
+        List<Integer> factors = new ArrayList<Integer>(primes.size());
+
+        for (int i = primes.size(); i > 0; --i) {
+            factors.add(0);
+        }
+
+        for (int i = 1; i <= n; ++i) {
+            int mul = i;
+
+            for (int j = 0; j < primes.size(); ++j) {
+                while (mul % primes.get(j) == 0) {
+                    mul /= primes.get(j);
+                    factors.set(j, factors.get(j) + 1);
+                }
+
+                if (mul <= 1) {
+                    break;
+                }
+            }
+        }
+
+        return factors.stream().map(x -> BigInteger.valueOf(x).add(BigInteger.ONE))
+                .reduce(BigInteger::multiply).get()
+                .mod(BigInteger.valueOf(PRIME)).intValue();
     }
 
     private static void flag19(final byte[] password) {
