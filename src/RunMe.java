@@ -52,7 +52,7 @@ public final class RunMe {
         // flag18(password);
         flag19(password);
         flag20(password);
-        flag21(password);
+        // flag21(password);
         // flag22(password);
         // flag23(password);
     }
@@ -458,15 +458,14 @@ public final class RunMe {
 
         for (int round = 0; round < 10; round++) {
             for (final Object item : List.copyOf(items)) {
-                // TODO: complete the switch expression using Java 21 features:
-                // items.add(
-                // case Integer i -> square of i as long
-                // case Long l and l is even -> l ^ 0x21L
-                // case Long l and l is odd -> -l
-                // case Pair(int x, int y) -> x << 8 ^ y
-                // case String s -> s.hashCode()
-                // default -> 0
-                // );
+                items.add(switch (item) {
+                    case Integer i -> (long)i * (long)i;
+                    case Long l when l % 2 == 0 -> l ^ 0x21L;
+                    case Long l -> -l;
+                    case Pair(int x, int y) -> x << 8 ^ y;
+                    case String s -> s.hashCode();
+                    default -> 0;
+                });
             }
         }
 
