@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class Sum {
+    public record Pair<First, Second>(First first, Second second) {}
+    
     public static void main(String[] args) {
         String input = String.join(" ", args);
         List<Integer> numbers = parseNumbers(input);
@@ -14,7 +16,7 @@ public class Sum {
     }
 
     public static List<Integer> parseNumbers(String input) {
-        ArrayList<Integer> numbers = new ArrayList<Integer>();
+        ArrayList<Integer> numbers = new ArrayList<>();
         byte sign = 1;
 
         for (int i = 0; i < input.length(); ++i) {
@@ -28,7 +30,10 @@ public class Sum {
             }
 
             if (Character.isDigit(input.charAt(i))) {
-                int number = parseSingleNumber(input, i) * sign;
+                Pair<Integer, Integer> pair = parseSingleNumber(input, i);
+
+                i = pair.first();
+                int number = pair.second() * sign;
 
                 numbers.add(number);
                 sign = 1;
@@ -37,8 +42,8 @@ public class Sum {
 
         return numbers;
     }
-
-    private static int parseSingleNumber(String input, int index) {
+    
+    private static Pair<Integer, Integer> parseSingleNumber(String input, Integer index) {
         int endIndex = index;
 
         while (endIndex < input.length() && Character.isDigit(input.charAt(endIndex))) {
@@ -49,7 +54,7 @@ public class Sum {
             // Throw an error, maybe.
         }
 
-        return Integer.parseInt(input.substring(index, endIndex));
+        return new Pair<>(endIndex, Integer.parseInt(input.substring(index, endIndex)));
     }
 
     public static int getNumbersSum(Iterable<Integer> numbers) {
