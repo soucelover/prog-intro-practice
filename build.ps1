@@ -1,8 +1,13 @@
 # PowerShell 7.0 is recommended
 
+[CmdletBinding(PositionalBinding = $false)]
 param (
     [String]$Name = "HelloWorld",
-    [String]$Class
+    [String]$Class,
+    [String[]]$JavaArgs,
+
+    [Parameter(ValueFromRemainingArguments)]
+    [object[]]$Arguments
 )
 
 $ErrorActionPreference = "Stop"
@@ -23,7 +28,7 @@ Pop-Location
 Write-Host "`nLaunching the application..."
 
 if ($Class -eq "") {
-    java -jar .\bin\$Name.jar @args
+    java @JavaArgs -jar .\bin\$Name.jar @Arguments
 } else {
-    java --class-path .\bin\$Name.jar $Class @args
+    java @JavaArgs --class-path .\bin\$Name.jar $Class @Arguments
 }
