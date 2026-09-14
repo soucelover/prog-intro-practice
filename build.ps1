@@ -2,7 +2,8 @@
 
 param (
     [String]$Name = "HelloWorld",
-    [String]$Class
+    [String]$Class,
+    [String[]]$JavaArgs
 )
 
 $ErrorActionPreference = "Stop"
@@ -23,7 +24,7 @@ Pop-Location
 Write-Host "`nLaunching the application..."
 
 if ($Class -eq "") {
-    java -jar .\bin\$Name.jar @args
+    java @JavaArgs -jar .\bin\$Name.jar @args
 } else {
-    java --class-path .\bin\$Name.jar $Class @args
+    java @JavaArgs --class-path .\bin\$Name.jar $Class @args
 }
