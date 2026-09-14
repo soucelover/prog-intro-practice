@@ -24,7 +24,7 @@ Remove-Item -Path "$Destination\*" -Recurse -Force -ErrorAction SilentlyContinue
 # Compilation
 $SourceFiles = Get-ChildItem -Path $Source -Filter "*.java" -Recurse -File
 
-javac -d bin $SourceFiles
+javac -d bin $SourceFiles | Out-Host
 Copy-Item "$Source\MANIFEST.MF" $Destination
 
 # Building JAR
@@ -33,8 +33,10 @@ Push-Location $Destination
 try {
     $ClassFiles = Get-ChildItem -Filter "*.class" -Recurse -File | Resolve-Path -Relative
     
-    jar cvfm .\$Name.jar .\MANIFEST.MF $ClassFiles
+    jar cvfm .\$Name.jar .\MANIFEST.MF $ClassFiles | Out-Host
 }
 finally {
     Pop-Location
 }
+
+return ("$Destination\$Name.jar" | Resolve-Path)

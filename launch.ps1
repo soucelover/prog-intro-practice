@@ -14,12 +14,12 @@ $ErrorActionPreference = "Stop"
 Set-StrictMode -Version Latest
 $PSNativeCommandUseErrorActionPreference = $true
 
-.\scripts\build.ps1 -Name $Name
+$JarFile = .\scripts\build.ps1 -Name $Name
 
 Write-Host "`nLaunching the application..."
 
 if ($Class -eq "") {
-    java @JavaArgs -jar .\bin\$Name.jar @Arguments
+    java @JavaArgs -jar $JarFile @Arguments
 } else {
-    java @JavaArgs --class-path .\bin\$Name.jar $Class @Arguments
+    java @JavaArgs --class-path $JarFile $Class @Arguments
 }
