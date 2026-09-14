@@ -14,16 +14,7 @@ $ErrorActionPreference = "Stop"
 Set-StrictMode -Version Latest
 $PSNativeCommandUseErrorActionPreference = $true
 
-Remove-Item -Path ".\bin\*" -Recurse -Force -ErrorAction SilentlyContinue
-
-# Compilation
-javac -d bin (Get-ChildItem -Path ".\src" -Filter "*.java" -Recurse -File)
-Copy-Item ".\src\MANIFEST.MF" ".\bin\"
-
-# Building JAR
-Push-Location ".\bin"
-jar cvfm .\$Name.jar .\MANIFEST.MF (Get-ChildItem -Filter "*.class" -Recurse -File | Resolve-Path -Relative)
-Pop-Location
+.\scripts\build.ps1 -Name $Name
 
 Write-Host "`nLaunching the application..."
 

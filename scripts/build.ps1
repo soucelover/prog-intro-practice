@@ -4,7 +4,7 @@
 param (
     [String]$Name = "HelloWorld",
     [String]$Source,
-    [String]$Destination,
+    [String]$Destination
 )
 
 $ErrorActionPreference = "Stop"
