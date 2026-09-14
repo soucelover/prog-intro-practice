@@ -17,7 +17,7 @@ public class Sum {
 
     public static List<Integer> parseNumbers(String input) {
         ArrayList<Integer> numbers = new ArrayList<>();
-        byte sign = 1;
+        int minuses = 0;
 
         for (int i = 0; i < input.length(); ++i) {
             if (Character.isWhitespace(input.charAt(i))
@@ -26,18 +26,25 @@ public class Sum {
             }
 
             if (input.charAt(i) == '-') {
-                sign *= -1;
+                ++minuses;
             }
 
             if (Character.isDigit(input.charAt(i))) {
                 Pair<Integer, Integer> pair = parseSingleNumber(input, i);
 
                 i = pair.first();
-                int number = pair.second() * sign;
+                int number = pair.second() * ((minuses & 1) == 0 ? 1 : -1);
 
                 numbers.add(number);
-                sign = 1;
+                minuses = 0;
             }
+
+            throw new IllegalArgumentException(
+                    "Unexpected character at index " + i + " (" + input.charAt(i) + ")");
+        }
+
+        if (minuses != 0) {
+            throw new IllegalArgumentException("Unexpected minus sign at the end of the input");
         }
 
         return numbers;
@@ -51,7 +58,8 @@ public class Sum {
         }
 
         if (index == endIndex) {
-            // Throw an error, maybe.
+            // Should be unreachable, but why not?
+            throw new IllegalArgumentException("Expected a number at index " + index);
         }
 
         return new Pair<>(endIndex, Integer.parseInt(input.substring(index, endIndex)));
