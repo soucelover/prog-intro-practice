@@ -4,8 +4,9 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class Sum {
-    public record Pair<First, Second>(First first, Second second) {}
-    
+    public record Pair<First, Second>(First first, Second second) {
+    }
+
     public static void main(String[] args) {
         String input = String.join(" ", args);
         List<Integer> numbers = parseNumbers(input);
@@ -49,7 +50,7 @@ public class Sum {
 
         return numbers;
     }
-    
+
     private static Pair<Integer, Integer> parseSingleNumber(String input, Integer index) {
         int endIndex = index;
 
