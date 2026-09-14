@@ -23,7 +23,7 @@ Pop-Location
 Write-Host "`nLaunching the application..."
 
 if ($Class -eq "") {
-    java -jar .\bin\$Name.jar
+    java -jar .\bin\$Name.jar @args
 } else {
-    java --class-path .\bin\$Name.jar $Class
+    java --class-path .\bin\$Name.jar $Class @args
 }

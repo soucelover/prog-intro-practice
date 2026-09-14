@@ -1,4 +1,4 @@
-package intro;
+package intro.java.hello_world;
 
 /**
  * Prints {@code Hello, %arg%!} on the console.
