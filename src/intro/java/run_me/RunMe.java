@@ -7,9 +7,13 @@ import java.security.NoSuchAlgorithmException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import java.net.URL;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
 
 /**
  * Run this code with provided arguments.
@@ -26,10 +30,10 @@ public final class RunMe {
         final byte[] password = parseArgs(args);
 
         // flag0(password);
-        // System.out.println("The first flag was low-hanging fruit, can you find
-        // others?");
-        // System.out.println("Try to read, understand and modify code in flagX(...)
-        // functions");
+        // System.out.println(
+        // "The first flag was low-hanging fruit, can you find others?");
+        // System.out.println(
+        // "Try to read, understand and modify code in flagX(...) functions");
 
         // flag1(password);
         // flag2(password);
@@ -37,23 +41,23 @@ public final class RunMe {
         // flag4(password);
         // flag5(password);
         // flag6(password);
-        flag9(password);
-        flag15(password);
-        flag7(password);
-        flag8(password);
-        flag10(password);
+        // flag7(password);
+        // flag8(password);
+        // flag9(password);
+        // flag10(password);
         // flag11(password);
-        flag12(password);
-        flag13(password);
+        // flag12(password);
+        // flag13(password);
         flag14(password);
-        flag16(password);
-        flag17(password);
-        flag18(password);
-        flag19(password);
+        // flag15(password);
+        // flag16(password);
+        // flag17(password);
+        // flag18(password);
+        // flag19(password);
         flag20(password);
-        flag21(password);
+        // flag21(password);
         // flag22(password);
-        flag23(password);
+        // flag23(password);
     }
 
     private static void flag0(final byte[] password) {
@@ -135,44 +139,102 @@ public final class RunMe {
         // The plural form of the most frequent noun
         final String plural = "characters";
         // The total number of occurrences (both singular and plural)
-        final int total = 117 + 121;
-        if (total != 0) {
-            print(7, (singular + ":" + plural + ":" + total).hashCode(), password);
-        }
+        final int total = 125 + 124;
+
+        print(7, (singular + ":" + plural + ":" + total).hashCode(), password);
     }
 
     private static void flag8(final byte[] password) {
         // Count the number of bluish (#005162) pixels of this image:
         // https://www.oracle.com/a/pr/img/rc24-java-26.jpg
 
-        final int number = 0;
-        if (number != 0) {
-            print(8, number, password);
+        BufferedImage image;
+
+        try {
+            URL url = new URL("https://www.oracle.com/a/pr/img/rc24-java-26.jpg");
+
+            image = ImageIO.read(url);
+
+        } catch (Exception e) {
+            System.err.println("Couldn't download the image: " + e.getMessage());
+            e.printStackTrace();
+            return;
         }
+
+        if (image == null) {
+            System.out.println("Failed to decode image: Format not supported by ImageIO.");
+            return;
+        }
+
+        final int width = image.getWidth();
+        final int height = image.getHeight();
+        int total = 0;
+
+        for (int x = 0; x < width; ++x) {
+            for (int y = 0; y < height; ++y) {
+                int rgb = image.getRGB(x, y);
+
+                int red = (rgb >> 16) & 0xff;
+                int green = (rgb >> 8) & 0xff;
+                int blue = rgb & 0xff;
+
+                if (red == 0x00 && green == 0x51 && blue == 0x62) {
+                    ++total;
+                }
+            }
+        }
+
+        print(8, total, password);
     }
 
     private static final String PATTERN = "You might be surprised how helpful the documentation can be!";
     private static final int SMALL_REPEAT_COUNT = 12_345_678;
 
     private static void flag9(final byte[] password) {
-        String repeated = "";
-        for (int i = 0; i < SMALL_REPEAT_COUNT; i++) {
-            repeated += PATTERN;
+        // Compute (PATTERN * SMALL_REPEAT_COUNT).hash_code()
+        final int single_hash = PATTERN.hashCode();
+        int hash = 0;
+
+        for (int i = 0; i < SMALL_REPEAT_COUNT; ++i) {
+            for (int j = 0; j < PATTERN.length(); ++j) {
+                hash *= 31;
+            }
+
+            hash += single_hash;
         }
 
-        print(9, repeated.hashCode(), password);
+        print(9, hash, password);
     }
 
     private static final long LARGE_REPEAT_SHIFT = 28;
     private static final long LARGE_REPEAT_COUNT = 1L << LARGE_REPEAT_SHIFT;
 
     private static void flag10(final byte[] password) {
-        String repeated = "";
-        for (long i = 0; i < LARGE_REPEAT_COUNT; i++) {
-            repeated += PATTERN;
+        // LARGE_REPEAT_COUNT is a power of two, so...
+        int hash = PATTERN.hashCode();
+        final long shift = pow31(PATTERN.length());
+
+        for (long i = 1; i < LARGE_REPEAT_COUNT; i <<= 1) {
+            hash = hash * pow31(PATTERN.length() * i) + hash;
         }
 
-        print(10, repeated.hashCode(), password);
+        print(10, hash, password);
+    }
+
+    private static int pow31(final long exp) {
+        int result = 1;
+        long n = exp;
+
+        while (n > 0) {
+            if ((n & 1) != 0) {
+                result *= 31;
+            }
+
+            result *= result;
+            n >>= 1;
+        }
+
+        return result;
     }
 
     private static void flag11(final byte[] password) {
@@ -180,13 +242,20 @@ public final class RunMe {
     }
 
     private static void flag12(final byte[] password) {
-        final BigInteger year = BigInteger.valueOf(-2026);
-        final BigInteger term = BigInteger.valueOf(PRIME + Math.abs(getInt(password)) % PRIME);
+        final long year = -2026;
+        final long term = PRIME + Math.abs(getInt(password)) % PRIME;
 
-        final long result = Stream.iterate(BigInteger.ZERO, BigInteger.ONE::add)
-                .filter(i -> year.multiply(i).add(term).multiply(i).compareTo(BigInteger.TEN) > 0)
-                .mapToLong(i -> i.longValue() * password[i.intValue() % password.length])
-                .sum();
+        long result = 0;
+
+        for (long i = 1; true; i++) {
+            final long value = (year * i + term) * i;
+
+            if (value <= 10) {
+                break;
+            }
+
+            result += i * password[(int) (i % password.length)];
+        }
 
         print(12, result, password);
     }
@@ -194,19 +263,13 @@ public final class RunMe {
     private static final long MAX_DEPTH = 100_000_000L;
 
     private static void flag13(final byte[] password) {
-        try {
-            flag13(password, 0, 0);
-        } catch (final StackOverflowError e) {
-            System.err.println("Stack overflow :((");
-        }
-    }
+        long result = 0;
 
-    private static void flag13(final byte[] password, final long depth, final long result) {
-        if (depth < MAX_DEPTH) {
-            flag13(password, depth + 1, (result ^ PRIME) | (result << 3) + depth * 7);
-        } else {
-            print(13, result, password);
+        for (int i = 0; i < MAX_DEPTH; ++i) {
+            result = (result ^ PRIME) | (result << 3) + i * 7;
         }
+
+        print(13, result, password);
     }
 
     private static void flag14(final byte[] password) {
@@ -224,6 +287,7 @@ public final class RunMe {
 
     private static void flag15(final byte[] password) {
         // REDACTED
+        print(15, 5534753422343243423L + password[2], password);
     }
 
     private static void flag16(final byte[] password) {
@@ -233,20 +297,24 @@ public final class RunMe {
                 (byte) (password[2] + password[5])
         };
 
-        for (long i = 1_000_000_000_000_000_000L + getInt(password); i >= 0; i--) {
+        long iterations = 1_000_000_000_000_000_000L + getInt(password);
+
+        for (int i = 0; i < 3; ++i, --iterations) {
             flag16Update(a);
         }
+
+        a[2] += a[0] * (iterations + 1);
 
         print(16, flag16Result(a), password);
     }
 
-    /* package-private */ static void flag16Update(byte[] a) {
+    static void flag16Update(byte[] a) {
         a[0] ^= a[1];
         a[1] -= a[1] * a[2];
         a[2] += a[0];
     }
 
-    /* package-private */ static int flag16Result(byte[] a) {
+    static int flag16Result(byte[] a) {
         return (a[0] + " " + a[1] + " " + a[2]).hashCode();
     }
 
@@ -280,16 +348,71 @@ public final class RunMe {
      * </pre>
      */
     private static int calc17(final int n) {
-        return n;
+        int i = 0;
+
+        while (i * i / 2026 + n < 10_000) {
+            ++i;
+        }
+
+        return i;
     }
 
     private static void flag18(final byte[] password) {
         final int n = 2026 + getInt(password) % 2026;
         // Find the number of factors of n! modulo PRIME
-        final int factors = 0;
-        if (factors != 0) {
-            print(18, factors, password);
+        final int factors = factorial_factors(n);
+        print(18, factors, password);
+    }
+
+    private static List<Integer> find_primes(final int upper_bound) {
+        List<Integer> primes = new ArrayList<Integer>();
+
+        primes.add(2);
+
+        for (int number = 3; number <= upper_bound; ++number) {
+            boolean is_prime = true;
+
+            for (int prime : primes) {
+                if (number % prime == 0) {
+                    is_prime = false;
+                    break;
+                }
+            }
+
+            if (is_prime) {
+                primes.add(number);
+            }
         }
+
+        return primes;
+    }
+
+    private static int factorial_factors(final int n) {
+        List<Integer> primes = find_primes((int) Math.ceil(n));
+        List<Integer> factors = new ArrayList<Integer>(primes.size());
+
+        for (int i = primes.size(); i > 0; --i) {
+            factors.add(0);
+        }
+
+        for (int i = 1; i <= n; ++i) {
+            int mul = i;
+
+            for (int j = 0; j < primes.size(); ++j) {
+                while (mul % primes.get(j) == 0) {
+                    mul /= primes.get(j);
+                    factors.set(j, factors.get(j) + 1);
+                }
+
+                if (mul <= 1) {
+                    break;
+                }
+            }
+        }
+
+        return factors.stream().map(x -> BigInteger.valueOf(x).add(BigInteger.ONE))
+                .reduce(BigInteger::multiply).get()
+                .mod(BigInteger.valueOf(PRIME)).intValue();
     }
 
     private static void flag19(final byte[] password) {
@@ -299,7 +422,13 @@ public final class RunMe {
         // discarding the last 26 digits.
         // How many of the first numbers of the resulting sequence will form an
         // arithmetic progression?
-        final long result = 0;
+        long result = 0;
+        final BigInteger div = BigInteger.TEN.pow(26);
+        final BigInteger term = BigInteger.valueOf(getInt(password)).abs();
+
+        final BigInteger i = div.sqrt().subtract(term);
+        result = i.longValue();
+
         if (result != 0) {
             print(19, result, password);
         }
@@ -338,15 +467,14 @@ public final class RunMe {
 
         for (int round = 0; round < 10; round++) {
             for (final Object item : List.copyOf(items)) {
-                // TODO: complete the switch expression using Java 21 features:
-                // items.add(
-                // case Integer i -> square of i as long
-                // case Long l and l is even -> l ^ 0x21L
-                // case Long l and l is odd -> -l
-                // case Pair(int x, int y) -> x << 8 ^ y
-                // case String s -> s.hashCode()
-                // default -> 0
-                // );
+                items.add(switch (item) {
+                    case Integer i -> (long) i * (long) i;
+                    case Long l when l % 2 == 0 -> l ^ 0x21L;
+                    case Long l -> -l;
+                    case Pair(int x, int y) -> x << 8 ^ y;
+                    case String s -> s.hashCode();
+                    default -> 0;
+                });
             }
         }
 
@@ -404,13 +532,71 @@ public final class RunMe {
      * <p>
      * Original idea Ivan Gorobets.
      */
+    private static final long multiplier = 0x5DEECE66DL;
+    private static final long addend = 0xBL;
+    private static final long mask = (1L << 48) - 1;
+
+    private static long advance(final long state, final long steps) {
+        long a = multiplier;
+        long c = addend;
+
+        long mul = 1;
+        long add = 0;
+
+        for (long i = steps; i != 0; i >>= 1) {
+            if ((i & 1) != 0) {
+                add = (add * a + c) & mask;
+                mul = (mul * a) & mask;
+            }
+
+            c = (c * (a + 1)) & mask;
+            a = (a * a) & mask;
+        }
+
+        return (mul * state + add) & mask;
+    }
+
+    private static void test23() {
+        final long seed = 5;
+        for (int n = 1; n < (1 << 15); ++n) {
+            Random random = new Random(seed);
+            long expected = 0;
+
+            for (int i = 0; i < n; ++i) {
+                expected = random.nextLong();
+            }
+
+            long state = (seed ^ multiplier) & mask;
+            state = advance(state, 2 * n - 1);
+            final long high = state >> 16;
+
+            state = (state * multiplier + addend) & mask;
+            final long low = state >> 16;
+
+            long result = (high << 32) + (int) low;
+
+            if (result != expected) {
+                System.out.println("Broke at n = " + n);
+            }
+        }
+    }
+
     private static void flag23(final byte[] password) {
-        final Random random = new Random(getInt(password));
+        final long seed = getInt(password);
 
         long result = 0;
-        for (long i = 0; i < 2026_000_000_000_000_000L; i++) {
-            result = random.nextLong();
-        }
+        long n = 2026_000_000_000_000_000L;
+        n %= (1L << 47);
+
+        long state = (seed ^ multiplier) & mask;
+
+        state = advance(state, 2 * n - 1);
+        final long high = state >> 16;
+
+        state = (state * multiplier + addend) & mask;
+        final long low = state >> 16;
+
+        result = (high << 32) + (int) low;
 
         print(23, result, password);
     }
