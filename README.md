@@ -23,6 +23,18 @@ include_toc: true
     * Числа дополнительно могут разделяться
       [символами валют](https://docs.oracle.com/en/java/javase/26/docs/api/java.base/java/lang/Character.html#CURRENCY_SYMBOL)
     * Класс должен иметь имя `Sum41`
+ * *42*
+    * Входные данные являются 16-битными целыми числами (тип `short`)
+    * Числа дополнительно могут разделяться
+      [управляющими символами](https://docs.oracle.com/en/java/javase/26/docs/api/java.base/java/lang/Character.html#CONTROL)
+    * Класс должен иметь имя `Sum42`
+ * *3839*
+    * Входные данные являются целыми числами помещающимися в тип [BigInteger](https://docs.oracle.com/en/java/javase/26/docs/api/java.base/java/math/BigInteger.html)
+    * Числа дополнительно могут разделяться
+      [открывающими](https://docs.oracle.com/en/java/javase/26/docs/api/java.base/java/lang/Character.html#START_PUNCTUATION)
+      и [закрывающими](https://docs.oracle.com/en/java/javase/26/docs/api/java.base/java/lang/Character.html#END_PUNCTUATION)
+      скобками
+    * Класс должен иметь имя `Sum3839`
 
 Для того, чтобы протестировать программу:
 
