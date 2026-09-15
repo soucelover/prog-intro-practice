@@ -18,6 +18,11 @@ include_toc: true
         [базовые классы](java/base/)
     * Откомпилированные тесты: [SumTest.jar](artifacts/SumTest.jar)
         * Аргументы командной строки: модификации
+ * *41*
+    * Входные данные являются 16-битными целыми числами (тип `short`)
+    * Числа дополнительно могут разделяться
+      [символами валют](https://docs.oracle.com/en/java/javase/26/docs/api/java.base/java/lang/Character.html#CURRENCY_SYMBOL)
+    * Класс должен иметь имя `Sum41`
 
 Для того, чтобы протестировать программу:
 

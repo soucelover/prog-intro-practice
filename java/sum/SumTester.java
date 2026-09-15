@@ -56,17 +56,17 @@ public class SumTester<T extends Number> {
         test(1, " 1");
         test(1, "1 ");
         test(1, " 1 ");
-        test(12345, " 12345 ");
+        test(123, " 123 ");
         test(60, "010", "020", "030");
-        testSpaces(1368, " 123 456 789 ");
+        testSpaces(235, " 123 45 67 ");
         test(-1, "-1");
         test(-6, "-1", "-2", "-3");
-        test(-12345, " -12345 ");
-        testSpaces(-1368, " -123 -456 -789 ");
+        test(-123, " -123 ");
+        testSpaces(-235, " -123 -45 -67 ");
         test(1, "+1");
         test(6, "+1", "+2", "+3");
-        test(12345, " +12345 ");
-        testSpaces(1368, " +123 +456 +789 ");
+        test(123, " +123 ");
+        testSpaces(235, " +123 +45 +67 ");
         test(0);
         testSpaces(0, " ", "  ");
     }
