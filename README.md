@@ -8,6 +8,24 @@ include_toc: true
 [Условия домашних заданий](https://www.kgeorgiy.info/courses/prog-intro/homeworks.html)
 
 
+## Домашнее задание 3. Реверс
+
+Модификации
+ * *Base*
+    * Исходный код тестов:
+        [ReverseTest.java](java/reverse/ReverseTest.java),
+        [ReverseTester.java](java/reverse/ReverseTester.java)
+    * Откомпилированные тесты: [ReverseTest.jar](artifacts/ReverseTest.jar)
+        * Аргументы командной строки: модификации
+ * *3637*
+    * Входные данные являются 64-битными целыми числами
+    * Числа дополнительно могут разделяться
+      [открывающими](https://docs.oracle.com/en/java/javase/26/docs/api/java.base/java/lang/Character.html#START_PUNCTUATION)
+      и [закрывающими](https://docs.oracle.com/en/java/javase/26/docs/api/java.base/java/lang/Character.html#END_PUNCTUATION)
+      скобками
+    * Класс должен иметь имя `Sum3637`
+
+
 ## Домашнее задание 2. Сумма чисел
 
 Модификации
