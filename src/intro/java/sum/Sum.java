@@ -28,6 +28,7 @@ public class Sum {
 
             if (input.charAt(i) == '-') {
                 ++minuses;
+                continue;
             }
 
             if (Character.isDigit(input.charAt(i))) {
@@ -38,6 +39,7 @@ public class Sum {
 
                 numbers.add(number);
                 minuses = 0;
+                continue;
             }
 
             throw new IllegalArgumentException(
