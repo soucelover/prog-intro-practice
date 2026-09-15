@@ -95,6 +95,16 @@ public final class SumTest {
     }
 
 
+    // === 3637
+
+    private static final Named<Supplier<SumTester<Long>>> LONG = Named.of("Long", () -> new SumTester<>(
+            Long::sum, n -> n, (r, max) -> r.getRandom().nextLong() % max, TO_STRING,
+            10L, 100L, (long) Integer.MAX_VALUE, Long.MAX_VALUE)
+            .test(12345678901234567L, " +12345678901234567 ")
+            .test(0L, " +12345678901234567 -12345678901234567")
+            .test(0L, " +12345678901234567 -12345678901234567"));
+
+
     // === Common
 
     /* package-private */ static <T extends Number> Consumer<TestCounter> variant(
@@ -128,6 +138,7 @@ public final class SumTest {
     public static Selector selector(final Class<?> owner, final Named<Function<String, Runner>> runner) {
         return new Selector(owner)
                 .variant("Base",            variant("", runner, BASE, plain()))
+                .variant("3637",            variant("3637", runner, LONG, brackets(plain())))
                 .variant("3839",            variant("3839", runner, BIG_INTEGER, brackets(plain())))
                 .variant("41",              variant("41"  , runner, SHORT, currency(plain())))
                 .variant("42",              variant("42"  , runner, SHORT, control(plain())))
