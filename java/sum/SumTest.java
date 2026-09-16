@@ -105,6 +105,18 @@ public final class SumTest {
             .test(0L, " +12345678901234567 -12345678901234567"));
 
 
+    // === 48
+
+    private static <T extends Number> Named<Op<T>> quote(final Named<SumTest.Op<T>> inner) {
+        //noinspection UnnecessaryUnicodeEscape
+        return addSpaces("Quote", inner,
+                "\"'",
+                "\u00bb\u2019\u201d\u203a\u2e03\u2e05\u2e0a\u2e0d\u2e1d\u2e21",
+                "\u00ab\u2018\u201b\u201c\u201f\u2039\u2e02\u2e04\u2e09\u2e0c\u2e1c\u2e20"
+        );
+    }
+
+
     // === Common
 
     /* package-private */ static <T extends Number> Consumer<TestCounter> variant(
@@ -142,6 +154,7 @@ public final class SumTest {
                 .variant("3839",            variant("3839", runner, BIG_INTEGER, brackets(plain())))
                 .variant("41",              variant("41"  , runner, SHORT, currency(plain())))
                 .variant("42",              variant("42"  , runner, SHORT, control(plain())))
+                .variant("48",              variant("48"  , runner, SHORT, quote(plain())))
                 ;
     }
 

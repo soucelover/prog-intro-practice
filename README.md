@@ -53,6 +53,12 @@ include_toc: true
       и [закрывающими](https://docs.oracle.com/en/java/javase/26/docs/api/java.base/java/lang/Character.html#END_PUNCTUATION)
       скобками
     * Класс должен иметь имя `Sum3637`
+ * *48*
+    * Входные данные являются 16-битными целыми числами (тип `short`)
+    * Числа дополнительно могут разделяться
+      обычными (`"'`), [открывающими](https://docs.oracle.com/en/java/javase/26/docs/api/java.base/java/lang/Character.html#INITIAL_QUOTE_PUNCTUATION)
+      и [закрывающими](https://docs.oracle.com/en/java/javase/26/docs/api/java.base/java/lang/Character.html#FINAL_QUOTE_PUNCTUATION) кавычками
+    * Класс должен иметь имя `Sum48`
 
 Для того, чтобы протестировать программу:
 
