@@ -117,6 +117,13 @@ public final class SumTest {
     }
 
 
+    // === 4749
+
+    private static final Named<Supplier<SumTester<Byte>>> BYTE = Named.of("Byte", () -> new SumTester<>(
+            (a, b) -> (byte) (a + b), n -> (byte) n, (r, max) -> (byte) (r.getRandom().nextLong() % max), TO_STRING,
+            (byte) 10, (byte) 100, Byte.MAX_VALUE));
+
+
     // === Common
 
     /* package-private */ static <T extends Number> Consumer<TestCounter> variant(
@@ -155,6 +162,7 @@ public final class SumTest {
                 .variant("41",              variant("41"  , runner, SHORT, currency(plain())))
                 .variant("42",              variant("42"  , runner, SHORT, control(plain())))
                 .variant("48",              variant("48"  , runner, SHORT, quote(plain())))
+                .variant("4749",            variant("4749", runner, BYTE, quote(plain())))
                 ;
     }
 
