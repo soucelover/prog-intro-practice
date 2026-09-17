@@ -105,6 +105,17 @@ public final class SumTest {
             .test(0L, " +12345678901234567 -12345678901234567"));
 
 
+    // === 3233
+
+    private static final Named<Supplier<SumTester<Float>>> FLOAT = Named.of("Float", () -> new SumTester<>(
+            Float::sum, n -> (float) n, (r, max) -> (r.getRandom().nextFloat() - 0.5f) * 2 * max,
+            (expected, out) ->
+                    Asserts.assertEquals("Sum", expected.doubleValue(), Float.parseFloat(out), 1e-5),
+            10.0f, 0.01f, 1e20f, Float.MAX_VALUE / 10000)
+            .test(5, "2.5 2.5")
+            .test(0, "1e10 -1e10")
+            .testT(2e10f, "1.5e10 0.5E10"));
+
     // === 48
 
     private static <T extends Number> Named<Op<T>> quote(final Named<SumTest.Op<T>> inner) {
@@ -157,6 +168,7 @@ public final class SumTest {
     public static Selector selector(final Class<?> owner, final Named<Function<String, Runner>> runner) {
         return new Selector(owner)
                 .variant("Base",            variant("", runner, BASE, plain()))
+                .variant("3233",            variant("3233", runner, FLOAT, plain()))
                 .variant("3637",            variant("3637", runner, LONG, brackets(plain())))
                 .variant("3839",            variant("3839", runner, BIG_INTEGER, brackets(plain())))
                 .variant("41",              variant("41"  , runner, SHORT, currency(plain())))

@@ -65,6 +65,9 @@ include_toc: true
       обычными (`"'`), [открывающими](https://docs.oracle.com/en/java/javase/26/docs/api/java.base/java/lang/Character.html#INITIAL_QUOTE_PUNCTUATION)
       и [закрывающими](https://docs.oracle.com/en/java/javase/26/docs/api/java.base/java/lang/Character.html#FINAL_QUOTE_PUNCTUATION) кавычками
     * Класс должен иметь имя `Sum4749`
+ * *3233*
+    * Входные данные являются 32-битными числами в формате с плавающей точкой
+    * Класс должен иметь имя `Sum3233`
 
 Для того, чтобы протестировать программу:
 
