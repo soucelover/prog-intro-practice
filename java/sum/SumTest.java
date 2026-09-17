@@ -105,7 +105,7 @@ public final class SumTest {
             .test(0L, " +12345678901234567 -12345678901234567"));
 
 
-    // === 3233
+    // === 3435
 
     private static final Named<Supplier<SumTester<Float>>> FLOAT = Named.of("Float", () -> new SumTester<>(
             Float::sum, n -> (float) n, (r, max) -> (r.getRandom().nextFloat() - 0.5f) * 2 * max,
@@ -169,6 +169,7 @@ public final class SumTest {
         return new Selector(owner)
                 .variant("Base",            variant("", runner, BASE, plain()))
                 .variant("3233",            variant("3233", runner, FLOAT, plain()))
+                .variant("3435",            variant("3435", runner, FLOAT, brackets(plain())))
                 .variant("3637",            variant("3637", runner, LONG, brackets(plain())))
                 .variant("3839",            variant("3839", runner, BIG_INTEGER, brackets(plain())))
                 .variant("41",              variant("41"  , runner, SHORT, currency(plain())))

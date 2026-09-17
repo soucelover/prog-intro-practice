@@ -68,6 +68,13 @@ include_toc: true
  * *3233*
     * Входные данные являются 32-битными числами в формате с плавающей точкой
     * Класс должен иметь имя `Sum3233`
+ * *3435*
+    * Входные данные являются 32-битными числами в формате с плавающей точкой
+    * Числа дополнительно могут разделяться
+      [открывающими](https://docs.oracle.com/en/java/javase/26/docs/api/java.base/java/lang/Character.html#START_PUNCTUATION)
+      и [закрывающими](https://docs.oracle.com/en/java/javase/26/docs/api/java.base/java/lang/Character.html#END_PUNCTUATION)
+      скобками
+    * Класс должен иметь имя `Sum3435`
 
 Для того, чтобы протестировать программу:
 
