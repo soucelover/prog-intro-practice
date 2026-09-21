@@ -8,9 +8,17 @@ public class Reverse {
     ArrayList<int[]> numbers = parseNumbers();
 
     for (int i = numbers.size() - 1; i >= 0; --i) {
-      for (int j = numbers.get(i).length - 1; j >= 0; --j) {
-        System.out.println(numbers.get(i)[j]);
+      int[] row = numbers.get(i);
+
+      for (int j = row.length - 1; j > 0; --j) {
+        System.out.print(row[j] + " ");
       }
+
+      if (row.length > 0) {
+        System.out.print(row[0]);
+      }
+
+      System.out.println();
     }
   }
 
