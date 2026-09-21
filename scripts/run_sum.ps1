@@ -16,8 +16,8 @@ Write-Host "Launching the application...`n"
 
 $Class = "intro.java.sum.SumTest"
 
-if ($Arguments -eq $null) {
-    java -enableassertions --class-path $JarFile $Class Base
+if ($null -eq $Arguments) {
+    java -enableassertions --class-path $JarFile $Class 3839
 } else {
     java -enableassertions --class-path $JarFile $Class @Arguments
 }
