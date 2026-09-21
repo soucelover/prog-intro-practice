@@ -32,7 +32,11 @@ public class Reverse {
   private static int[] parseSingleLine(String line) {
     ArrayList<Integer> numbers = new ArrayList<>();
 
-    // TODO: Write number parsing algorithm
+    try (Scanner scanner = new Scanner(line)) {
+      while (scanner.hasNext()) {
+        numbers.add(scanner.nextInt());
+      }
+    }
 
     // Convert into primitive array to reduce memory usage
     int[] result = new int[numbers.size()];
