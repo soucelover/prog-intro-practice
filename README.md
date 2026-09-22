@@ -8,6 +8,19 @@ include_toc: true
 [Условия домашних заданий](https://www.kgeorgiy.info/courses/prog-intro/homeworks.html)
 
 
+## Домашнее задание 4. Подсчет слов
+
+Модификации
+ * *Base*
+    * Класс должен иметь имя `WordStat`
+    * Исходный код тестов:
+        [WordStatTest.java](java/wordStat/WordStatTest.java),
+        [WordStatTester.java](java/wordStat/WordStatTester.java),
+        [WordStatChecker.java](java/wordStat/WordStatChecker.java)
+    * Откомпилированные тесты: [WordStatTest.jar](artifacts/WordStatTest.jar)
+        * Аргументы командной строки: модификации
+
+
 ## Домашнее задание 3. Реверс
 
 Модификации
