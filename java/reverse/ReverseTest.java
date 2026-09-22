@@ -109,6 +109,21 @@ public final class ReverseTest {
     }
 
 
+    // === 42
+
+    private static final Named<LongUnaryOperator> ABS = Named.of("Abs", Math::abs);
+    private static final Named<Op> SUM_42 = sum1(ABS);
+
+
+    // === 3839
+
+    private static final Named<Op> SUM_3839 = sum2(ABS);
+
+    private static Named<Op> sum2(final Named<LongUnaryOperator> lift) {
+        return Named.of("Sum2" + lift.name(), Order.DIRECT.scan2(0, lift.value()::applyAsLong, Long::sum, Long::sum));
+    }
+
+
     // === Common
 
     public static final int MAX_SIZE = 10_000 / TestCounter.DENOMINATOR;
@@ -137,7 +152,9 @@ public final class ReverseTest {
     public static Selector selector(final Class<?> owner, final int maxSize) {
         return new Selector(owner)
                 .variant("Base", ReverseTester.variant(maxSize, REVERSE))
+                .variant("3839", variant(maxSize, "3839", SUM_3839, HEX))
                 .variant("41"  , variant(maxSize, "41",   SUM_41, HEX))
+                .variant("42"  , variant(maxSize, "42",   SUM_42, HEX))
                 ;
     }
 
