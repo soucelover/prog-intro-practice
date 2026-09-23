@@ -27,15 +27,6 @@ public final class ReverseTest {
     private static final Monoid SUM = new Monoid("Sum", 0, (a, b) -> (int) (a + b));
     private static final Named<Op> SUM_41 = sum1(NONE);
 
-    record Monoid(String name, int zero, LongBinaryOperator op) {
-        private Named<Op> row(final Named<LongUnaryOperator> lift) {
-            return Named.of(
-                    this.name() + "R" + Order.DIRECT.name + lift.name(),
-                    Order.DIRECT.scan2(zero, lift.value()::applyAsLong, (a, b) -> b, this.op())
-            );
-        }
-    }
-
     private static Named<Op> sum1(final Named<LongUnaryOperator> lift) {
         return cross(lift);
     }
@@ -62,6 +53,20 @@ public final class ReverseTest {
         );
     }
 
+
+    // === 42
+
+    private static final Named<LongUnaryOperator> ABS = Named.of("Abs", Math::abs);
+    private static final Named<Op> SUM_42 = sum1(ABS);
+
+
+    // === 3839
+
+    private static final Named<Op> SUM_3839 = sum2(ABS);
+
+    private static Named<Op> sum2(final Named<LongUnaryOperator> lift) {
+        return Named.of("Sum2" + lift.name(), Order.DIRECT.scan2(0, lift.value()::applyAsLong, Long::sum, Long::sum));
+    }
 
     private enum Order {
         DIRECT("B", false, false);
@@ -109,24 +114,29 @@ public final class ReverseTest {
     }
 
 
-    // === 42
-
-    private static final Named<LongUnaryOperator> ABS = Named.of("Abs", Math::abs);
-    private static final Named<Op> SUM_42 = sum1(ABS);
-
-
-    // === 3839
-
-    private static final Named<Op> SUM_3839 = sum2(ABS);
-
-    private static Named<Op> sum2(final Named<LongUnaryOperator> lift) {
-        return Named.of("Sum2" + lift.name(), Order.DIRECT.scan2(0, lift.value()::applyAsLong, Long::sum, Long::sum));
-    }
-
-
     // === 3637
 
     private static final Named<Op> SUM_3637 = sum2(NONE);
+
+
+    // === 48
+
+    static final int M = 1_000_000;
+    private static final Named<LongUnaryOperator> MOD = Named.of("Mod", a -> (a % M + M) % M);
+    private static final Named<Op> SUM_48 = sum1(MOD);
+
+    private static final Named<BiFunction<ExtendedRandom, Integer, String>> DEC = Named.of("", (r, i) -> Integer.toString(i));
+
+    record Monoid(String name, int zero, LongBinaryOperator op) {
+        private Named<Op> row(final Named<LongUnaryOperator> lift) {
+            return Named.of(
+                    this.name() + "R" + Order.DIRECT.name + lift.name(),
+                    Order.DIRECT.scan2(zero, lift.value()::applyAsLong, (a, b) -> b, this.op())
+            );
+        }
+    }
+
+
 
 
     // === Common
@@ -161,6 +171,7 @@ public final class ReverseTest {
                 .variant("3839", variant(maxSize, "3839", SUM_3839, HEX))
                 .variant("41"  , variant(maxSize, "41",   SUM_41, HEX))
                 .variant("42"  , variant(maxSize, "42",   SUM_42, HEX))
+                .variant("48"  , variant(maxSize, "48",   SUM_48, DEC))
                 ;
     }
 
