@@ -125,6 +125,13 @@ public final class ReverseTest {
     private static final Named<LongUnaryOperator> MOD = Named.of("Mod", a -> (a % M + M) % M);
     private static final Named<Op> SUM_48 = sum1(MOD);
 
+
+    // === 4749
+
+    private static final Named<LongUnaryOperator> ABS_MOD = Named.of("AbsMod", a -> Math.abs(a) % M);
+    private static final Named<Op> SUM_4749 = sum1(ABS_MOD);
+
+
     private static final Named<BiFunction<ExtendedRandom, Integer, String>> DEC = Named.of("", (r, i) -> Integer.toString(i));
 
     record Monoid(String name, int zero, LongBinaryOperator op) {
@@ -171,6 +178,7 @@ public final class ReverseTest {
                 .variant("3839", variant(maxSize, "3839", SUM_3839, HEX))
                 .variant("41"  , variant(maxSize, "41",   SUM_41, HEX))
                 .variant("42"  , variant(maxSize, "42",   SUM_42, HEX))
+                .variant("4749", variant(maxSize, "4749", SUM_4749, DEC))
                 .variant("48"  , variant(maxSize, "48",   SUM_48, DEC))
                 ;
     }
