@@ -132,6 +132,9 @@ public final class ReverseTest {
     private static final Named<Op> SUM_4749 = sum1(ABS_MOD);
 
 
+   // === 3233
+
+    public static final Named<Op> SUM_3233 = SUM.row(ABS);
     private static final Named<BiFunction<ExtendedRandom, Integer, String>> DEC = Named.of("", (r, i) -> Integer.toString(i));
 
     record Monoid(String name, int zero, LongBinaryOperator op) {
@@ -142,8 +145,6 @@ public final class ReverseTest {
             );
         }
     }
-
-
 
 
     // === Common
@@ -174,6 +175,7 @@ public final class ReverseTest {
     public static Selector selector(final Class<?> owner, final int maxSize) {
         return new Selector(owner)
                 .variant("Base", ReverseTester.variant(maxSize, REVERSE))
+                .variant("3233", variant(maxSize, "3233", SUM_3233, DEC))
                 .variant("3637", variant(maxSize, "3637", SUM_3637, HEX))
                 .variant("3839", variant(maxSize, "3839", SUM_3839, HEX))
                 .variant("41"  , variant(maxSize, "41",   SUM_41, HEX))
