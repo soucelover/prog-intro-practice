@@ -147,6 +147,10 @@ public final class ReverseTest {
     }
 
 
+    // === 3435
+    private static final Named<Op> SUM_3435 = SUM.row(NONE);
+
+
     // === Common
 
     public static final int MAX_SIZE = 10_000 / TestCounter.DENOMINATOR;
@@ -176,6 +180,7 @@ public final class ReverseTest {
         return new Selector(owner)
                 .variant("Base", ReverseTester.variant(maxSize, REVERSE))
                 .variant("3233", variant(maxSize, "3233", SUM_3233, DEC))
+                .variant("3435", variant(maxSize, "3435", SUM_3435, HEX))
                 .variant("3637", variant(maxSize, "3637", SUM_3637, HEX))
                 .variant("3839", variant(maxSize, "3839", SUM_3839, HEX))
                 .variant("41"  , variant(maxSize, "41",   SUM_41, HEX))
