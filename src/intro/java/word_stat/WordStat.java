@@ -42,7 +42,7 @@ public class WordStat {
       boolean pointingAtWord = false;
       int wordPartStart = 0;
 
-      while ((charsRead = reader.read(buf, 0, READER_BUFFER_SIZE)) != -1) {
+      while ((charsRead = reader.read(buf)) != -1) {
         for (int i = 0; i < charsRead; ++i) {
           // Word end or between words
           if (!characterIsWordPart(buf[i])) {
@@ -70,7 +70,7 @@ public class WordStat {
         }
 
         if (pointingAtWord) {
-          word.append(buf, wordPartStart, READER_BUFFER_SIZE - wordPartStart);
+          word.append(buf, wordPartStart, charsRead - wordPartStart);
         }
       }
 
