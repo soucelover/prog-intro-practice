@@ -1,5 +1,6 @@
 package intro.java.word_stat;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -24,7 +25,7 @@ public class WordStat {
 
       outputWordStats(wordStats, outputPath);
     } catch (IOException exc) {
-      System.out.println(exc.getLocalizedMessage());
+      System.err.println(exc.getLocalizedMessage());
       return;
     }
   }
