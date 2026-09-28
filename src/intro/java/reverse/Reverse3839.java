@@ -37,7 +37,7 @@ public class Reverse3839 {
     try (Scanner scanner = new Scanner(line)) {
       while (scanner.hasNext()) {
         String token = scanner.next();
-        int number = Integer.parseUnsignedInt(token, 16);
+        int number = Math.abs(Integer.parseUnsignedInt(token, 16));
 
         numbers = addToCappedArray(numbers, length, number);
         ++length;
