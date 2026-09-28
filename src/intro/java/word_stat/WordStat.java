@@ -50,11 +50,15 @@ public class WordStat {
               continue;
             }
 
+            pointingAtWord = false;
+
             if (i != 0) {
               word.append(buf, wordPartStart, i - wordPartStart);
             }
 
-            wordStats.compute(word.toString(), (k, v) -> (v == null) ? 0 : v + 1);
+            countWordIn(wordStats, word);
+            word.setLength(0);
+            continue;
           }
 
           if (!pointingAtWord) {
@@ -69,6 +73,10 @@ public class WordStat {
           word.append(buf, wordPartStart, READER_BUFFER_SIZE - wordPartStart);
         }
       }
+
+      if (pointingAtWord) {
+        countWordIn(wordStats, word);
+      }
     }
 
     return wordStats;
@@ -78,6 +86,10 @@ public class WordStat {
     return Character.isLetter(character)
         || Character.getType(character) == Character.DASH_PUNCTUATION
         || character == '\'';
+  }
+
+  private static void countWordIn(LinkedHashMap<String, Integer> wordStats, StringBuilder word) {
+    wordStats.compute(word.toString().toLowerCase(), (k, v) -> (v == null) ? 1 : v + 1);
   }
 
   public static void outputWordStats(SequencedMap<String, Integer> wordStats, File outputPath)
