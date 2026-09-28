@@ -6,7 +6,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
-import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Locale;
@@ -96,9 +95,10 @@ public class WordStat {
 
   private static void outputWordStats(SequencedMap<String, Integer> wordStats, File outputPath)
       throws IOException {
-    try (Writer writer = new BufferedWriter(new FileWriter(outputPath, StandardCharsets.UTF_8))) {
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputPath, StandardCharsets.UTF_8))) {
       for (Map.Entry<String, Integer> entry : wordStats.sequencedEntrySet()) {
-        writer.write(entry.getKey() + " " + entry.getValue() + "\n");
+        writer.write(entry.getKey() + " " + entry.getValue());
+        writer.newLine();
       }
     }
   }
