@@ -34,16 +34,13 @@ public class WordStat {
 
     try (Reader reader = new FileReader(inputPath, StandardCharsets.UTF_8)) {
       char[] buf = new char[READER_BUFFER_SIZE];
-      int offset = 0;
       int charsRead;
 
       StringBuilder word = new StringBuilder();
       boolean pointingAtWord = false;
       int wordPartStart = 0;
 
-      while ((charsRead = reader.read(buf, offset, READER_BUFFER_SIZE)) != -1) {
-        offset += charsRead;
-
+      while ((charsRead = reader.read(buf, 0, READER_BUFFER_SIZE)) != -1) {
         for (int i = 0; i < charsRead; ++i) {
           // Word end or between words
           if (!characterIsWordPart(buf[i])) {
