@@ -2,8 +2,10 @@ package intro.java.word_stat;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
+import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -18,12 +20,12 @@ public class WordStat {
 
     try {
       wordStats = analyzeFile(inputPath);
+
+      outputWordStats(wordStats, outputPath);
     } catch (IOException exc) {
       System.out.println(exc.getLocalizedMessage());
       return;
     }
-
-    outputWordStats(wordStats, outputPath);
   }
 
   private static int READER_BUFFER_SIZE = 256;
@@ -78,9 +80,12 @@ public class WordStat {
         || character == '\'';
   }
 
-  public static void outputWordStats(SequencedMap<String, Integer> wordStats, File outputPath) {
-    for (Map.Entry<String, Integer> entry : wordStats.sequencedEntrySet()) {
-      System.out.println(entry.getKey() + " " + entry.getValue());
+  public static void outputWordStats(SequencedMap<String, Integer> wordStats, File outputPath)
+      throws IOException {
+    try (Writer writer = new FileWriter(outputPath)) {
+      for (Map.Entry<String, Integer> entry : wordStats.sequencedEntrySet()) {
+        writer.write(entry.getKey() + " " + entry.getValue() + "\n");
+      }
     }
   }
 }
