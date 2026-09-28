@@ -49,7 +49,8 @@ public class Reverse3839 {
 
   private static int[] addToCappedArray(int[] array, int length, int item) {
     if (length + 1 >= array.length) {
-      array = Arrays.copyOf(array, (length * 3) / 2);
+      int newLength = Math.max(length + 1, (length * 3) / 2);
+      array = Arrays.copyOf(array, newLength);
     }
 
     array[length] = item;
