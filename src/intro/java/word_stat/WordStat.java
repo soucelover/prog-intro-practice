@@ -8,6 +8,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.SequencedMap;
 
@@ -89,12 +90,12 @@ public class WordStat {
   }
 
   private static void countWordIn(LinkedHashMap<String, Integer> wordStats, StringBuilder word) {
-    wordStats.compute(word.toString().toLowerCase(), (k, v) -> (v == null) ? 1 : v + 1);
+    wordStats.compute(word.toString().toLowerCase(Locale.ROOT), (k, v) -> (v == null) ? 1 : v + 1);
   }
 
   public static void outputWordStats(SequencedMap<String, Integer> wordStats, File outputPath)
       throws IOException {
-    try (Writer writer = new FileWriter(outputPath)) {
+    try (Writer writer = new BufferedWriter(new FileWriter(outputPath, StandardCharsets.UTF_8))) {
       for (Map.Entry<String, Integer> entry : wordStats.sequencedEntrySet()) {
         writer.write(entry.getKey() + " " + entry.getValue() + "\n");
       }
