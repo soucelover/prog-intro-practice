@@ -21,7 +21,7 @@ public final class WordStatChecker extends BaseChecker {
     public static final String ADVANCED_DELIMITERS = " \t!\"#%&()*+,./:;<=>?@[\\]^`{|}~ ¡¦§¨©«¬\u00AD®¯°±²³´¶·¸¹»¼½¾¿×÷˂˃˄˅˒˓˔˕˖˗˘˙˚˛˜˝";
     public static final String ALL = ExtendedRandom.RUSSIAN + ExtendedRandom.ENGLISH + ExtendedRandom.GREEK + DASH;
     private static final Pattern PATTERN = Pattern.compile("[^\\p{IsLetter}'\\p{Pd}]+");
-    public static final Runner.Packages RUNNER = Runner.packages("", "wordstat", "wspp");
+    public static final Runner.Packages RUNNER = Runner.packages("", "wordstat", "wspp", "intro.java.word_stat");
 
     private final Function<String[][], ? extends List<? extends Pair<?, ?>>> processor;
 
