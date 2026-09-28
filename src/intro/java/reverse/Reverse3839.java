@@ -32,18 +32,18 @@ public class Reverse3839 {
 
   private static int[] parseSingleLine(final String line) {
     int length = 0;
-    int[] numbers = new int[1]; // :NOTE: memory usage
+    int[] numbers = new int[1]; // :NOTE: memory usage -- was ArrayList<Integer>
 
     try (Scanner scanner = new Scanner(line)) {
       while (scanner.hasNext()) {
         String token = scanner.next();
         int number = Integer.parseUnsignedInt(token, 16);
-        
+
         numbers = addToCappedArray(numbers, length, number);
         ++length;
       }
     }
-    
+
     return Arrays.copyOf(numbers, length);
   }
 
@@ -57,7 +57,7 @@ public class Reverse3839 {
   }
 
   private static void processMatrix(int[][] numbers) {
-    int[] columnSums = new int[0]; // :NOTE: naming
+    int[] columnSums = new int[0]; // :NOTE: naming -- was column_sums
 
     for (int i = 0; i < numbers.length; ++i) {
       int[] row = numbers[i];
