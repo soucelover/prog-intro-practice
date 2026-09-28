@@ -29,9 +29,9 @@ public class WordStat {
     }
   }
 
-  private static int READER_BUFFER_SIZE = 256;
+  private static final int READER_BUFFER_SIZE = 8192;
 
-  public static LinkedHashMap<String, Integer> analyzeFile(File inputPath)
+  private static SequencedMap<String, Integer> analyzeFile(File inputPath)
       throws IOException {
     LinkedHashMap<String, Integer> wordStats = new LinkedHashMap<>();
 
@@ -89,11 +89,11 @@ public class WordStat {
         || character == '\'';
   }
 
-  private static void countWordIn(LinkedHashMap<String, Integer> wordStats, StringBuilder word) {
+  private static void countWordIn(Map<String, Integer> wordStats, StringBuilder word) {
     wordStats.compute(word.toString().toLowerCase(Locale.ROOT), (k, v) -> (v == null) ? 1 : v + 1);
   }
 
-  public static void outputWordStats(SequencedMap<String, Integer> wordStats, File outputPath)
+  private static void outputWordStats(SequencedMap<String, Integer> wordStats, File outputPath)
       throws IOException {
     try (Writer writer = new BufferedWriter(new FileWriter(outputPath, StandardCharsets.UTF_8))) {
       for (Map.Entry<String, Integer> entry : wordStats.sequencedEntrySet()) {
