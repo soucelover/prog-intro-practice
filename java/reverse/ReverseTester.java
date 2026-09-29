@@ -26,7 +26,7 @@ public final class ReverseTester {
     private final String name;
     private final String spaces;
 
-    private ReverseTester(final String className, final Op transform, final String spaces) {
+    public ReverseTester(final String className, final Op transform, final String spaces) {
         this(className, transform, spaces, (r, i) -> Integer.toString(i), (r, i) -> Long.toString(i));
     }
 
