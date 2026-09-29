@@ -32,10 +32,23 @@ public final class WordStatTest {
     );
 
 
+    // === 3839
+    private static final WordStatTester.Variant ORDER_2 =
+            new WordStatTester.Variant("", false, COUNT.thenComparing(WORDS));
+    private static final Named<Function<String, Stream<String>>> SHINGLES = Named.of(
+            "Shingles",
+            s -> s.length() >= 3
+                    ? IntStream.rangeClosed(0, s.length() - 3).mapToObj(i -> s.substring(i, i + 3))
+                    : Stream.of(s)
+    );
+
+
     // === Common
     public static final Selector SELECTOR = new Selector(WordStatTester.class)
             .variant("Base", BASE.with("", ID))
             .variant("41",   ORDER_1.with("41",   PREFIXES))
+            .variant("42",   ORDER_1.with("42",   SHINGLES))
+            .variant("3839", ORDER_2.with("3839", SHINGLES))
             ;
 
     private WordStatTest() {
