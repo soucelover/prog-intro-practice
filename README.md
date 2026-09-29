@@ -8,6 +8,18 @@ include_toc: true
 [Условия домашних заданий](https://www.kgeorgiy.info/courses/prog-intro/homeworks.html)
 
 
+## Домашнее задание 5. Свой сканнер
+
+В этой домашней работе специальные тесты только для ДЗ-3.
+Для ДЗ-4 используйте тесты от него.
+
+Модификации
+ * *Base*
+    * Исходный код тестов: [FastReverseTest.java](java/reverse/FastReverseTest.java)
+    * Откомпилированные тесты: [FastReverseTest.jar](artifacts/FastReverseTest.jar)
+        * Аргументы командной строки: модификации
+
+
 ## Домашнее задание 4. Подсчет слов
 
 Модификации
