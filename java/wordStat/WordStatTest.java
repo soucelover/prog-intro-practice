@@ -43,12 +43,20 @@ public final class WordStatTest {
     );
 
 
+    // == 3637
+    private static final Named<Function<String, Stream<String>>> SUFFIXES = Named.of(
+            "Suffixes",
+            s -> IntStream.range(Math.max(0, s.length() - 100), s.length()).mapToObj(s::substring)
+    );
+
+
     // === Common
     public static final Selector SELECTOR = new Selector(WordStatTester.class)
             .variant("Base", BASE.with("", ID))
             .variant("41",   ORDER_1.with("41",   PREFIXES))
             .variant("42",   ORDER_1.with("42",   SHINGLES))
             .variant("3839", ORDER_2.with("3839", SHINGLES))
+            .variant("3637", ORDER_2.with("3637", SUFFIXES))
             ;
 
     private WordStatTest() {
