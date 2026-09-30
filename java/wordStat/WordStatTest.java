@@ -5,7 +5,9 @@ import base.Pair;
 import base.Selector;
 
 import java.util.Comparator;
+import java.util.LinkedHashSet;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -37,8 +39,8 @@ public final class WordStatTest {
             new WordStatTester.Variant("", false, COUNT.thenComparing(WORDS));
     private static final Named<Function<String, Stream<String>>> SHINGLES = Named.of(
             "Shingles",
-            s -> s.length() >= 3
-                    ? IntStream.rangeClosed(0, s.length() - 3).mapToObj(i -> s.substring(i, i + 3))
+            s -> s.length() >= 3 
+                    ? IntStream.rangeClosed(0, s.length() - 3).mapToObj(i -> s.substring(i, i + 3)) 
                     : Stream.of(s)
     );
 
@@ -50,13 +52,36 @@ public final class WordStatTest {
     );
 
 
+    // === 48
+    private static final Named<Function<String, Stream<String>>> DEDUP_A = Named.of(
+            "DedupA",
+            s -> dedup(s.chars().sorted()
+                    .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                    .toString())
+    );
+
+    private static Stream<String> dedup(final String s) {
+        final int[] prev = new int[]{-1};
+        return Stream.of(s.chars()
+                .filter(c -> {
+                    final boolean r = prev[0] != c;
+                    prev[0] = c;
+                    return r;
+                })
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString());
+    }
+
+
+  
     // === Common
     public static final Selector SELECTOR = new Selector(WordStatTester.class)
             .variant("Base", BASE.with("", ID))
             .variant("41",   ORDER_1.with("41",   PREFIXES))
             .variant("42",   ORDER_1.with("42",   SHINGLES))
             .variant("3839", ORDER_2.with("3839", SHINGLES))
-            .variant("3637", ORDER_2.with("3637", SUFFIXES))
+            .variant("3536", ORDER_2.with("3637", SUFFIXES))
+            .variant("48",   ORDER_1.with("48",   DEDUP_A))
             ;
 
     private WordStatTest() {
