@@ -73,7 +73,16 @@ public final class WordStatTest {
     }
 
 
-  
+    // === 4749
+    private static final Named<Function<String, Stream<String>>> DEDUP_D = Named.of(
+            "DedupD",
+            s -> dedup(s.chars().sorted()
+                    .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                    .reverse()
+                    .toString())
+    );
+
+
     // === Common
     public static final Selector SELECTOR = new Selector(WordStatTester.class)
             .variant("Base", BASE.with("", ID))
@@ -82,6 +91,7 @@ public final class WordStatTest {
             .variant("3839", ORDER_2.with("3839", SHINGLES))
             .variant("3536", ORDER_2.with("3637", SUFFIXES))
             .variant("48",   ORDER_1.with("48",   DEDUP_A))
+            .variant("4749", ORDER_1.with("4749", DEDUP_D))
             ;
 
     private WordStatTest() {
