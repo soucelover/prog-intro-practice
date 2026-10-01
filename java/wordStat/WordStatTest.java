@@ -83,6 +83,12 @@ public final class WordStatTest {
     );
 
 
+    // === 3233
+    private static final Named<Function<String, Stream<String>>> DEDUP_C = Named.of(
+            "DedupC",
+            WordStatTest::dedup
+    );
+
     // === Common
     public static final Selector SELECTOR = new Selector(WordStatTester.class)
             .variant("Base", BASE.with("", ID))
@@ -92,6 +98,7 @@ public final class WordStatTest {
             .variant("3536", ORDER_2.with("3637", SUFFIXES))
             .variant("48",   ORDER_1.with("48",   DEDUP_A))
             .variant("4749", ORDER_1.with("4749", DEDUP_D))
+            .variant("3233", ORDER_2.with("3233", DEDUP_C))
             ;
 
     private WordStatTest() {
