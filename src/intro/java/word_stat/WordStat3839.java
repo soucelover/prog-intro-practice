@@ -16,7 +16,7 @@ public class WordStat3839 {
     File inputPath = new File(args[0]);
     File outputPath = new File(args[1]);
 
-    Map<String, Integer> wordStats;
+    Map<Long, Integer> wordStats;
 
     try {
       wordStats = analyzeFile(inputPath);
@@ -30,9 +30,9 @@ public class WordStat3839 {
 
   private static final int READER_BUFFER_SIZE = 8192;
 
-  private static Map<String, Integer> analyzeFile(File inputPath)
+  private static Map<Long, Integer> analyzeFile(File inputPath)
       throws IOException {
-    HashMap<String, Integer> wordStats = new HashMap<>();
+    HashMap<Long, Integer> wordStats = new HashMap<>();
 
     try (Reader reader = new FileReader(inputPath, StandardCharsets.UTF_8)) {
       char[] buf = new char[READER_BUFFER_SIZE];
@@ -95,7 +95,7 @@ public class WordStat3839 {
    * the object either
    * shouldn't be used, or should be cleared.
    */
-  private static void countWordIn(Map<String, Integer> wordStats, StringBuilder word) {
+  private static void countWordIn(Map<Long, Integer> wordStats, StringBuilder word) {
     for (int i = 0; i < word.length(); ++i) {
       word.setCharAt(i, Character.toLowerCase(word.charAt(i)));
     }
@@ -103,18 +103,45 @@ public class WordStat3839 {
     String wordString = word.toString();
 
     if (word.length() < 3) {
-      countShingleIn(wordStats, wordString);
+      countShingleIn(wordStats, getShingle(wordString, 0));
       return;
     }
 
     int end = word.length() - 2;
 
     for (int i = 0; i < end; ++i) {
-      countShingleIn(wordStats, wordString.substring(i, i + 3));
+      countShingleIn(wordStats, getShingle(wordString, i));
     }
   }
 
-  private static void countShingleIn(Map<String, Integer> wordStats, String shingle) {
+  private static long getShingle(String word, int start) {
+    long shingle = 0;
+    int end = Math.min(start + 3, word.length());
+
+    for (int i = start; i < end; ++i) {
+      shingle = (shingle << 16) + word.charAt(i);
+    }
+
+    shingle <<= 16 * (4 - end + start);
+    shingle += end - start;
+
+    return shingle;
+  }
+
+  private static String shingleToString(long shingle) {
+    char length = (char) shingle;
+    shingle >>>= 16 * (4 - length);
+    char[] result = new char[length];
+
+    for (int i = length - 1; i >= 0; --i) {
+      result[i] = (char) shingle;
+      shingle >>>= 16;
+    }
+
+    return new String(result);
+  }
+
+  private static void countShingleIn(Map<Long, Integer> wordStats, long shingle) {
     Integer count = wordStats.get(shingle);
 
     if (count == null) {
@@ -124,9 +151,9 @@ public class WordStat3839 {
     }
   }
 
-  private static void outputWordStats(Map<String, Integer> wordStats, File outputPath)
+  private static void outputWordStats(Map<Long, Integer> wordStats, File outputPath)
       throws IOException {
-    ArrayList<Map.Entry<String, Integer>> entries = new ArrayList<>(wordStats.entrySet());
+    ArrayList<Map.Entry<Long, Integer>> entries = new ArrayList<>(wordStats.entrySet());
 
     entries.sort((left, right) -> {
       int comp = Integer.compare(left.getValue(), right.getValue());
@@ -135,12 +162,12 @@ public class WordStat3839 {
         return comp;
       }
 
-      return left.getKey().compareTo(right.getKey());
+      return Long.compareUnsigned(left.getKey(), right.getKey());
     });
 
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputPath, StandardCharsets.UTF_8))) {
-      for (Map.Entry<String, Integer> entry : entries) {
-        writer.write(entry.getKey() + " " + entry.getValue());
+      for (Map.Entry<Long, Integer> entry : entries) {
+        writer.write(shingleToString(entry.getKey()) + " " + entry.getValue());
         writer.newLine();
       }
     }
