@@ -9,7 +9,6 @@ import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 public class WordStat3839 {
@@ -89,8 +88,19 @@ public class WordStat3839 {
         || character == '\'';
   }
 
+  /**
+   * Counts the word in the words statistics.
+   * 
+   * Affects content of the passed <code>word</code> parameter. After the call,
+   * the object either
+   * shouldn't be used, or should be cleared.
+   */
   private static void countWordIn(Map<String, Integer> wordStats, StringBuilder word) {
-    String wordString = word.toString().toLowerCase(Locale.ROOT);
+    for (int i = 0; i < word.length(); ++i) {
+      word.setCharAt(i, Character.toLowerCase(word.charAt(i)));
+    }
+
+    String wordString = word.toString();
 
     if (word.length() < 3) {
       countShingleIn(wordStats, wordString);
@@ -105,7 +115,13 @@ public class WordStat3839 {
   }
 
   private static void countShingleIn(Map<String, Integer> wordStats, String shingle) {
-    wordStats.compute(shingle, (k, v) -> (v == null) ? 1 : v + 1);
+    Integer count = wordStats.get(shingle);
+
+    if (count == null) {
+      wordStats.put(shingle, 1);
+    } else {
+      wordStats.put(shingle, count + 1);
+    }
   }
 
   private static void outputWordStats(Map<String, Integer> wordStats, File outputPath)
