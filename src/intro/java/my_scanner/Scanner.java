@@ -22,6 +22,8 @@ public class Scanner implements Closeable, Iterator<String> {
   private boolean closed = false;
   private boolean readerFinished = false;
 
+  private IOException lastException;
+
   // Buffers
   private static final int BUFFER_SIZE = 1024;
 
@@ -57,16 +59,12 @@ public class Scanner implements Closeable, Iterator<String> {
     this(new FileReader(file));
   }
 
-  public void close() {
+  public void close() throws IOException {
     if (closed) {
       return;
     }
 
-    try {
-      reader.close();
-    } catch (IOException exc) {
-    }
-
+    reader.close();
     closed = true;
   }
 
@@ -93,7 +91,9 @@ public class Scanner implements Closeable, Iterator<String> {
 
       end += charsRead;
     } catch (IOException exc) {
+      // exceptions ignored
       readerFinished = true;
+      lastException = exc;
       return false;
     }
 
@@ -102,6 +102,7 @@ public class Scanner implements Closeable, Iterator<String> {
 
   private void increaseBuffer() {
     if (position > 0) {
+      // StringBuilder?
       // Reclaim space if possible
       System.arraycopy(buffer, position, buffer, 0, end - position);
       end -= position;
@@ -131,11 +132,7 @@ public class Scanner implements Closeable, Iterator<String> {
     int count = 0;
 
     while (true) {
-      if (position + count == end && !readInput()) {
-        return count;
-      }
-
-      if (predicate.test(buffer[position + count])) {
+      if (position + count == end && !readInput() || predicate.test(buffer[position + count])) {
         return count;
       }
 
