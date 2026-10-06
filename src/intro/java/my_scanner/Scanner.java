@@ -26,7 +26,15 @@ public class Scanner implements Closeable, Iterator<String> {
   private static final int BUFFER_SIZE = 1024;
 
   private char[] buffer;
+
+  /**
+   * Position in the buffer from which all the parsing operations are performed.
+   * Characters in buffer before <code>position</code> are never reused.
+   */
   private int position = 0;
+  /**
+   * The end of the buffer part with read characters.
+   */
   private int end = 0;
 
   public Scanner(Reader reader) {
@@ -49,14 +57,25 @@ public class Scanner implements Closeable, Iterator<String> {
     this(new FileReader(file));
   }
 
+  public void close() {
+    if (closed) {
+      return;
+    }
+
+    try {
+      reader.close();
+    } catch (IOException exc) {
+    }
+
+    closed = true;
+  }
+
+  // General internal helpers
+
   private void ensureOpen() {
     if (closed) {
       throw new IllegalStateException("Performing a read operation on an already closed scanner.");
     }
-  }
-
-  private RuntimeException errorNoMoreTokens() {
-    return new NoSuchElementException("No more tokens to read.");
   }
 
   private boolean readInput() {
@@ -93,6 +112,8 @@ public class Scanner implements Closeable, Iterator<String> {
     buffer = Arrays.copyOf(buffer, buffer.length * 2);
   }
 
+  // Token Parsing
+
   @FunctionalInterface
   public interface CharPredicate {
     boolean test(char arg);
@@ -102,6 +123,9 @@ public class Scanner implements Closeable, Iterator<String> {
     return !Character.isWhitespace(character);
   }
 
+  /**
+   * How many characters to skip before next token occurs?
+   */
   private int nextSkippedCount(CharPredicate predicate) {
     // assume closed == true and can get more than one character
     int count = 0;
@@ -119,13 +143,29 @@ public class Scanner implements Closeable, Iterator<String> {
     }
   }
 
+  public boolean hasNext(CharPredicate predicate) {
+    ensureOpen();
+
+    final int startOffset = nextSkippedCount(predicate);
+
+    if (position + startOffset == end && !readInput()) {
+      return false;
+    }
+
+    return predicate.test(buffer[position + startOffset]);
+  }
+
+  public boolean hasNext() {
+    return hasNext(Scanner::characterIsTokenPart);
+  }
+
   private record TokenInfo(int startOffset, int length) {
     private int totalOffset() {
       return startOffset + length;
     }
   }
 
-  private String getToken(TokenInfo token) {
+  private String getTokenString(TokenInfo token) {
     return new String(buffer, position + token.startOffset, token.length);
   }
 
@@ -152,34 +192,20 @@ public class Scanner implements Closeable, Iterator<String> {
     }
   }
 
-  private TokenInfo findNextToken() {
-    return findNextToken(Scanner::characterIsTokenPart);
-  }
-
-  public boolean hasNext(CharPredicate predicate) {
-    ensureOpen();
-
-    return findNextToken(predicate).length > 0;
-  }
-
-  public boolean hasNext() {
-    return hasNext(Scanner::characterIsTokenPart);
-  }
-
   public String next(CharPredicate predicate) {
     ensureOpen();
 
     if (position == end && readerFinished) {
-      throw errorNoMoreTokens();
+      throw new NoSuchElementException("No more tokens to read.");
     }
 
     TokenInfo tokenInfo = findNextToken(predicate);
 
     if (tokenInfo.length == 0) {
-      throw errorNoMoreTokens();
+      throw new NoSuchElementException("No more tokens to read.");
     }
 
-    String token = getToken(tokenInfo);
+    String token = getTokenString(tokenInfo);
     position += tokenInfo.totalOffset();
 
     return token;
@@ -189,17 +215,19 @@ public class Scanner implements Closeable, Iterator<String> {
     return next(Scanner::characterIsTokenPart);
   }
 
+  // Integer parsing
+
   public boolean hasNextInt() {
     ensureOpen();
 
-    TokenInfo token = findNextToken();
+    TokenInfo token = findNextToken(Scanner::characterIsTokenPart);
 
     if (token.length == 0) {
       return false;
     }
 
     try {
-      Integer.parseInt(getToken(token));
+      Integer.parseInt(getTokenString(token));
       return true;
     } catch (NumberFormatException exc) {
       return false;
@@ -210,17 +238,17 @@ public class Scanner implements Closeable, Iterator<String> {
     ensureOpen();
 
     if (position == end && readerFinished) {
-      throw errorNoMoreTokens();
+      throw new NoSuchElementException("No more tokens to read.");
     }
 
-    TokenInfo token = findNextToken();
+    TokenInfo token = findNextToken(Scanner::characterIsTokenPart);
 
     if (token.length == 0) {
-      throw errorNoMoreTokens();
+      throw new NoSuchElementException("No more tokens to read.");
     }
 
     try {
-      int value = Integer.parseInt(getToken(token));
+      int value = Integer.parseInt(getTokenString(token));
 
       position += token.totalOffset();
       return value;
@@ -228,6 +256,8 @@ public class Scanner implements Closeable, Iterator<String> {
       throw new InputMismatchException("Couldn't convert token to int.");
     }
   }
+
+  // Line parsing
 
   public boolean hasNextLine() {
     ensureOpen();
@@ -240,6 +270,7 @@ public class Scanner implements Closeable, Iterator<String> {
   }
 
   private int findLineSeparatorLength(int offset) {
+    // Assume position + offset < end
     switch (buffer[position + offset]) {
       case '\n':
       case '\u0085':
@@ -309,18 +340,5 @@ public class Scanner implements Closeable, Iterator<String> {
 
     position += lineInfo.fullLength();
     return line;
-  }
-
-  public void close() {
-    if (closed) {
-      return;
-    }
-
-    try {
-      reader.close();
-    } catch (IOException exc) {
-    }
-
-    closed = true;
   }
 }
