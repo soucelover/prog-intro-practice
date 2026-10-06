@@ -8,6 +8,18 @@ include_toc: true
 [Условия домашних заданий](https://www.kgeorgiy.info/courses/prog-intro/homeworks.html)
 
 
+## Домашнее задание 6. Подсчет слов++
+
+Модификации
+ * *Base*
+    * Класс должен иметь имя `Wspp`
+    * Исходный код тестов:
+        [WsppTest.java](java/wspp/WsppTest.java),
+        [WsppTester.java](java/wspp/WsppTester.java)
+    * Откомпилированные тесты: [WsppTest.jar](artifacts/WsppTest.jar)
+        * Аргументы командной строки: модификации
+
+
 ## Домашнее задание 5. Свой сканнер
 
 В этой домашней работе специальные тесты только для ДЗ-3.
