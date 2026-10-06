@@ -56,6 +56,16 @@ include_toc: true
       и [закрывающими](https://docs.oracle.com/en/java/javase/26/docs/api/java.base/java/lang/Character.html#END_PUNCTUATION)
       скобками
     * Класс должен иметь имя `FastReverse3839`
+ * *3637*
+    * Во вводе могут быть десятичные и шестнадцатеричные (начинаются с `0x`) числа
+    * В выводе должны быть шестнадцатеричные числа
+    * Рассмотрим входные данные как (не полностью определенную) матрицу,
+      вместо каждого числа выведите сумму из чисел в прямоугольнике верхний левый угол матрицы — текущее число
+    * Числа дополнительно могут разделяться
+      [открывающими](https://docs.oracle.com/en/java/javase/26/docs/api/java.base/java/lang/Character.html#START_PUNCTUATION)
+      и [закрывающими](https://docs.oracle.com/en/java/javase/26/docs/api/java.base/java/lang/Character.html#END_PUNCTUATION)
+      скобками
+    * Класс должен иметь имя `FastReverse3637`
 
 
 ## Домашнее задание 4. Подсчет слов

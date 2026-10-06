@@ -86,6 +86,7 @@ public final class FastReverseTest {
 
     public static final Selector SELECTOR = new Selector(FastReverseTest.class)
             .variant("Base", variant("", ReverseTest.REVERSE))
+            .variant("3637", variant("3637", ReverseTest.SUM_3637, BRACKETS, HEX_DEC, HEX_OUT))
             .variant("3839", variant("3839", ReverseTest.SUM_3839, BRACKETS, HEX_DEC, HEX_OUT))
             .variant("41"  , variant("41",   ReverseTest.SUM_41, CURRENCY, HEX_DEC, HEX_OUT))
             .variant("42"  , variant("42",   ReverseTest.SUM_42, CONTROL, HEX_DEC, HEX_OUT))
