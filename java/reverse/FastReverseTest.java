@@ -95,6 +95,7 @@ public final class FastReverseTest {
             .variant("3839", variant("3839", ReverseTest.SUM_3839, BRACKETS, HEX_DEC, HEX_OUT))
             .variant("41"  , variant("41",   ReverseTest.SUM_41, CURRENCY, HEX_DEC, HEX_OUT))
             .variant("42"  , variant("42",   ReverseTest.SUM_42, CONTROL, HEX_DEC, HEX_OUT))
+            .variant("4749", variant("4749", ReverseTest.SUM_4749, QUOTE, HEX_DEC, HEX_OUT))
             .variant("48"  , variant("48",   ReverseTest.SUM_48, QUOTE, HEX_DEC, HEX_OUT))
             ;
 
