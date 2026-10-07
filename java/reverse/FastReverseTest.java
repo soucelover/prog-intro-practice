@@ -42,7 +42,7 @@ public final class FastReverseTest {
                         .collect(Collectors.joining())
         );
     }
-
+    
     public static Consumer<TestCounter> variant(
             final String name,
             final Named<ReverseTester.Op> op,
@@ -70,6 +70,11 @@ public final class FastReverseTest {
     public static final Named<String> BRACKETS = spaces("Brackets", ch -> ch == ' ' || Character.getType(ch) == Character.START_PUNCTUATION || Character.getType(ch) == Character.END_PUNCTUATION);
 
 
+    // === 48
+
+    public static final Named<String> QUOTE = spaces("Quote", ch -> ch == ' ' || ch == '\'' || ch == '"' || Character.getType(ch) == Character.INITIAL_QUOTE_PUNCTUATION || Character.getType(ch) == Character.FINAL_QUOTE_PUNCTUATION);
+    
+
     // === Common
     public static final int MAX_SIZE = 1_000_000 / TestCounter.DENOMINATOR / TestCounter.DENOMINATOR;
 
@@ -90,13 +95,14 @@ public final class FastReverseTest {
             .variant("3839", variant("3839", ReverseTest.SUM_3839, BRACKETS, HEX_DEC, HEX_OUT))
             .variant("41"  , variant("41",   ReverseTest.SUM_41, CURRENCY, HEX_DEC, HEX_OUT))
             .variant("42"  , variant("42",   ReverseTest.SUM_42, CONTROL, HEX_DEC, HEX_OUT))
+            .variant("48"  , variant("48",   ReverseTest.SUM_48, QUOTE, HEX_DEC, HEX_OUT))
             ;
 
     private FastReverseTest() {
     }
 
     public static void main(final String... args) {
-        SELECTOR.main(args);
         WordStatTest.main(args);
+        SELECTOR.main(args);
     }
 }
