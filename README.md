@@ -84,7 +84,12 @@ include_toc: true
       обычными (`"'`), [открывающими](https://docs.oracle.com/en/java/javase/26/docs/api/java.base/java/lang/Character.html#INITIAL_QUOTE_PUNCTUATION)
       и [закрывающими](https://docs.oracle.com/en/java/javase/26/docs/api/java.base/java/lang/Character.html#FINAL_QUOTE_PUNCTUATION) кавычками
     * Класс должен иметь имя `FastReverse4749`
-
+ * *3233*
+    * Во вводе и выводе используются шестнадцатеричные числа
+    * Рассмотрим входные данные как (не полностью определенную) матрицу,
+      вместо каждого числа выведите сумму из чисел, предшествующих ему в строке, и его самого
+    * Числа разделены [пробельными символами](https://docs.oracle.com/en/java/javase/26/docs/api/java.base/java/lang/Character.html#isWhitespace(char)).
+    * Класс должен иметь имя `FastReverse3233`
 
 ## Домашнее задание 4. Подсчет слов
 

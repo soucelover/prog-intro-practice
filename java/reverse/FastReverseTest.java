@@ -73,7 +73,13 @@ public final class FastReverseTest {
     // === 48
 
     public static final Named<String> QUOTE = spaces("Quote", ch -> ch == ' ' || ch == '\'' || ch == '"' || Character.getType(ch) == Character.INITIAL_QUOTE_PUNCTUATION || Character.getType(ch) == Character.FINAL_QUOTE_PUNCTUATION);
+
     
+    // === 3233
+    
+    public static final Named<BiFunction<ExtendedRandom, Integer, String>> HEX = Named.of("Hex", (r, i) -> Integer.toHexString(i));
+    public static final Named<String> WHITESPACE = spaces("Whitespace", Character::isWhitespace);
+
 
     // === Common
     public static final int MAX_SIZE = 1_000_000 / TestCounter.DENOMINATOR / TestCounter.DENOMINATOR;
@@ -91,6 +97,7 @@ public final class FastReverseTest {
 
     public static final Selector SELECTOR = new Selector(FastReverseTest.class)
             .variant("Base", variant("", ReverseTest.REVERSE))
+            .variant("3233", variant("3233", ReverseTest.SUM_3233, WHITESPACE, HEX, HEX))
             .variant("3637", variant("3637", ReverseTest.SUM_3637, BRACKETS, HEX_DEC, HEX_OUT))
             .variant("3839", variant("3839", ReverseTest.SUM_3839, BRACKETS, HEX_DEC, HEX_OUT))
             .variant("41"  , variant("41",   ReverseTest.SUM_41, CURRENCY, HEX_DEC, HEX_OUT))
