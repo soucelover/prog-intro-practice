@@ -1,7 +1,10 @@
 package intro.java.reverse;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+
 // my_scanner
 import intro.java.my_scanner.Scanner;
 
@@ -11,13 +14,16 @@ public class FastReverse3839 {
 
     try (Scanner scanner = new Scanner(System.in)) {
       numbers = parseNumbers(scanner);
+    } catch (IOException exc) {
+      System.err.println("Couldn't read from the input.");
+      return;
     }
 
     processMatrix(numbers);
     printMatrix(numbers);
   }
 
-  private static int[][] parseNumbers(final Scanner scanner) {
+  private static int[][] parseNumbers(final Scanner scanner) throws IOException {
     List<int[]> numbers = new ArrayList<>();
 
     while (scanner.hasNextLine()) {
@@ -31,7 +37,7 @@ public class FastReverse3839 {
     return numbers.toArray(new int[0][]);
   }
 
-  private static int[] parseSingleLine(final String line) {
+  private static int[] parseSingleLine(final String line) throws IOException {
     int length = 0;
     int[] numbers = new int[1];
 

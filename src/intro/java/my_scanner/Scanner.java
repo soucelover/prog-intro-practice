@@ -11,18 +11,21 @@ import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.InputMismatchException;
-import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
 // UTF-8 is used with all constructors explicitly
-public class Scanner implements Closeable, Iterator<String> {
+public class Scanner implements Closeable {
+  private enum State {
+    READING,
+    EOF,
+    FAILED,
+    CLOSED;
+  }
+
   // Fields related to the characters source
   private final Reader reader;
-  private boolean closed = false;
-  private boolean readerFinished = false;
-
-  private IOException lastException;
+  private State state = State.READING;
 
   // Buffers
   private static final int BUFFER_SIZE = 1024;
@@ -60,23 +63,39 @@ public class Scanner implements Closeable, Iterator<String> {
   }
 
   public void close() throws IOException {
-    if (closed) {
+    if (state == State.CLOSED) {
       return;
     }
 
     reader.close();
-    closed = true;
+    state = State.CLOSED;
+  }
+
+  public boolean error() {
+    return state == State.FAILED;
+  }
+
+  public boolean eof() {
+    return state == State.EOF;
+  }
+
+  public boolean canRead() {
+    return state == State.READING;
   }
 
   // General internal helpers
 
-  private void ensureOpen() {
-    if (closed) {
+  private void ensureGoodState() {
+    if (state == State.CLOSED) {
       throw new IllegalStateException("Performing a read operation on an already closed scanner.");
+    }
+
+    if (state == State.FAILED) {
+      throw new IllegalStateException("Performing a read operation on a scanner in a failed state.");
     }
   }
 
-  private boolean readInput() {
+  private boolean readInput() throws IOException {
     if (end == buffer.length) {
       increaseBuffer();
     }
@@ -85,24 +104,23 @@ public class Scanner implements Closeable, Iterator<String> {
       int charsRead = reader.read(buffer, end, buffer.length - end);
 
       if (charsRead == -1) {
-        readerFinished = true;
+        state = State.EOF;
         return false;
       }
 
       end += charsRead;
     } catch (IOException exc) {
-      // exceptions ignored
-      readerFinished = true;
-      lastException = exc;
-      return false;
+      state = State.FAILED;
+      throw exc;
     }
 
     return true;
   }
 
   private void increaseBuffer() {
+    // NOTE: StringBuilder is not usable with Reader.read, so a manual
+    // implementation is used here instead
     if (position > 0) {
-      // StringBuilder?
       // Reclaim space if possible
       System.arraycopy(buffer, position, buffer, 0, end - position);
       end -= position;
@@ -127,12 +145,12 @@ public class Scanner implements Closeable, Iterator<String> {
   /**
    * How many characters to skip before next token occurs?
    */
-  private int nextSkippedCount(CharPredicate predicate) {
-    // assume closed == true and can get more than one character
+  private int nextSkippedCount(CharPredicate predicate) throws IOException {
+    // assume state is 'good'
     int count = 0;
 
     while (true) {
-      if (position + count == end && !readInput() || predicate.test(buffer[position + count])) {
+      if ((position + count == end && !readInput()) || predicate.test(buffer[position + count])) {
         return count;
       }
 
@@ -140,8 +158,12 @@ public class Scanner implements Closeable, Iterator<String> {
     }
   }
 
-  public boolean hasNext(CharPredicate predicate) {
-    ensureOpen();
+  public boolean hasNext(CharPredicate predicate) throws IOException {
+    ensureGoodState();
+
+    if (position == end && state == State.EOF) {
+      return false;
+    }
 
     final int startOffset = nextSkippedCount(predicate);
 
@@ -152,7 +174,7 @@ public class Scanner implements Closeable, Iterator<String> {
     return predicate.test(buffer[position + startOffset]);
   }
 
-  public boolean hasNext() {
+  public boolean hasNext() throws IOException {
     return hasNext(Scanner::characterIsTokenPart);
   }
 
@@ -166,8 +188,8 @@ public class Scanner implements Closeable, Iterator<String> {
     return new String(buffer, position + token.startOffset, token.length);
   }
 
-  private TokenInfo findNextToken(CharPredicate predicate) {
-    // assume closed == true and can get more than one character
+  private TokenInfo findNextToken(CharPredicate predicate) throws IOException {
+    // assume state is 'good'
     final int startOffset = nextSkippedCount(predicate);
     int pos = position + startOffset;
     int length = 0;
@@ -189,10 +211,10 @@ public class Scanner implements Closeable, Iterator<String> {
     }
   }
 
-  public String next(CharPredicate predicate) {
-    ensureOpen();
+  public String next(CharPredicate predicate) throws IOException {
+    ensureGoodState();
 
-    if (position == end && readerFinished) {
+    if (position == end && state == State.EOF) {
       throw new NoSuchElementException("No more tokens to read.");
     }
 
@@ -208,14 +230,18 @@ public class Scanner implements Closeable, Iterator<String> {
     return token;
   }
 
-  public String next() {
+  public String next() throws IOException {
     return next(Scanner::characterIsTokenPart);
   }
 
   // Integer parsing
 
-  public boolean hasNextInt() {
-    ensureOpen();
+  public boolean hasNextInt() throws IOException {
+    ensureGoodState();
+
+    if (position == end && state == State.EOF) {
+      return false;
+    }
 
     TokenInfo token = findNextToken(Scanner::characterIsTokenPart);
 
@@ -231,10 +257,10 @@ public class Scanner implements Closeable, Iterator<String> {
     }
   }
 
-  public int nextInt() {
-    ensureOpen();
+  public int nextInt() throws IOException {
+    ensureGoodState();
 
-    if (position == end && readerFinished) {
+    if (position == end && state == State.EOF) {
       throw new NoSuchElementException("No more tokens to read.");
     }
 
@@ -256,18 +282,18 @@ public class Scanner implements Closeable, Iterator<String> {
 
   // Line parsing
 
-  public boolean hasNextLine() {
-    ensureOpen();
+  public boolean hasNextLine() throws IOException {
+    ensureGoodState();
 
     if (position < end) {
       return true;
     }
 
-    return !readerFinished && readInput();
+    return state != State.EOF && readInput();
   }
 
-  private int findLineSeparatorLength(int offset) {
-    // Assume position + offset < end
+  private int findLineSeparatorLength(int offset) throws IOException {
+    // Assume position + offset < end and state is 'good'
     switch (buffer[position + offset]) {
       case '\n':
       case '\u0085':
@@ -297,8 +323,8 @@ public class Scanner implements Closeable, Iterator<String> {
     }
   }
 
-  private LineInfo findNextLine() {
-    // assume closed == false and no EOF or IOException occured
+  private LineInfo findNextLine() throws IOException {
+    // assume state is 'good'
     int length = 0;
 
     while (true) {
@@ -320,10 +346,10 @@ public class Scanner implements Closeable, Iterator<String> {
     }
   }
 
-  public String nextLine() {
-    ensureOpen();
+  public String nextLine() throws IOException {
+    ensureGoodState();
 
-    if (position == end && readerFinished) {
+    if (position == end && state == State.EOF) {
       throw new NoSuchElementException("No more lines to read.");
     }
 

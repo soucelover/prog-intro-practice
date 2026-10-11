@@ -1,11 +1,17 @@
 package intro.java.reverse;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import intro.java.my_scanner.Scanner;
 
 public class FastReverse {
   public static void main(String[] args) {
     ArrayList<int[]> numbers = parseNumbers();
+
+    if (numbers == null) {
+      System.err.println("Failed to read from input.");
+      return;
+    }
 
     for (int i = numbers.size() - 1; i >= 0; --i) {
       int[] row = numbers.get(i);
@@ -27,17 +33,21 @@ public class FastReverse {
 
     ArrayList<int[]> numbers = new ArrayList<>();
 
-    while (scanner.hasNextLine()) {
-      String line = scanner.nextLine();
+    try {
+      while (scanner.hasNextLine()) {
+        String line = scanner.nextLine();
 
-      int[] row = parseSingleLine(line);
-      numbers.add(row);
+        int[] row = parseSingleLine(line);
+        numbers.add(row);
+      }
+    } catch (IOException exc) {
+      return null;
     }
 
     return numbers;
   }
 
-  private static int[] parseSingleLine(String line) {
+  private static int[] parseSingleLine(String line) throws IOException {
     ArrayList<Integer> numbers = new ArrayList<>();
 
     try (Scanner scanner = new Scanner(line)) {
