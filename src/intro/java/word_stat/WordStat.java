@@ -10,7 +10,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.SequencedMap;
 
-import intro.java.my_scanner.Scanner;
+import intro.java.myscanner.Scanner;
 
 public class WordStat {
   public static void main(String[] args) {

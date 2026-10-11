@@ -2,7 +2,8 @@ package intro.java.reverse;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import intro.java.my_scanner.Scanner;
+
+import intro.java.myscanner.Scanner;
 
 public class FastReverse {
   public static void main(String[] args) {

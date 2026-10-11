@@ -1,4 +1,7 @@
-package intro.java.my_scanner;
+// NOTE: Lowercase only for package names
+// https://google.github.io/styleguide/javaguide.html#s5.2.1-package-names
+// https://docs.oracle.com/javase/tutorial/java/package/namingpkgs.html
+package intro.java.myscanner;
 
 import java.io.Closeable;
 import java.io.File;

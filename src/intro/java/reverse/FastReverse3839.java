@@ -5,8 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-// my_scanner
-import intro.java.my_scanner.Scanner;
+import intro.java.myscanner.Scanner;
 
 public class FastReverse3839 {
   public static void main(String[] args) {
