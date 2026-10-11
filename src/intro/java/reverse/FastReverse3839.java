@@ -8,32 +8,40 @@ import java.util.List;
 import intro.java.myscanner.Scanner;
 
 public class FastReverse3839 {
+  record InputMatrix(int[][] numbers, int maxRowLength) {
+  }
+
   public static void main(String[] args) {
-    int[][] numbers;
+    InputMatrix matrix;
 
     try (Scanner scanner = new Scanner(System.in)) {
-      numbers = parseNumbers(scanner);
+      matrix = parseNumbers(scanner);
     } catch (IOException exc) {
       System.err.println("Couldn't read from the input.");
       return;
     }
 
-    processMatrix(numbers);
-    printMatrix(numbers);
+    processMatrix(matrix);
+    printMatrix(matrix.numbers);
   }
 
-  private static int[][] parseNumbers(final Scanner scanner) throws IOException {
+  private static InputMatrix parseNumbers(final Scanner scanner) throws IOException {
     List<int[]> numbers = new ArrayList<>();
+    int maxRowLength = 0;
 
     while (scanner.hasNextLine()) {
       String line = scanner.nextLine(); // memory
 
       int[] row = parseSingleLine(line);
       numbers.add(row);
+
+      if (row.length > maxRowLength) {
+        maxRowLength = row.length;
+      }
     }
 
     // No need to pre-allocate any space
-    return numbers.toArray(new int[0][]);
+    return new InputMatrix(numbers.toArray(new int[0][]), maxRowLength);
   }
 
   private static int[] parseSingleLine(final String line) throws IOException {
@@ -84,16 +92,12 @@ public class FastReverse3839 {
     return array;
   }
 
-  private static void processMatrix(int[][] numbers) {
-    int[] columnSums = new int[0];
+  private static void processMatrix(InputMatrix matrix) {
+    // NOTE: O(n^2) avoided
+    int[] columnSums = new int[matrix.maxRowLength];
 
-    for (int i = 0; i < numbers.length; ++i) {
-      int[] row = numbers[i];
-
-      // n^3/2
-      if (row.length > columnSums.length) {
-        columnSums = Arrays.copyOf(columnSums, row.length);
-      }
+    for (int i = 0; i < matrix.numbers.length; ++i) {
+      int[] row = matrix.numbers[i];
 
       if (row.length > 0) {
         row[0] += columnSums[0];
