@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+import intro.java.common.IntList;
 import intro.java.myscanner.Scanner;
 
 public class FastReverse3839 {
@@ -35,38 +35,33 @@ public class FastReverse3839 {
   private static InputMatrix parseNumbers(final Scanner scanner) throws IOException {
     // NOTE: Memory issue with per-line reading avoided
     List<int[]> numbers = new ArrayList<>();
-    int[] row = new int[1];
-    int rowLength = 0;
-    int maxRowLength = 0;
+    IntList row = new IntList();
+    int maxRowSize = 0;
 
     while (scanner.hasNext(true)) {
       String token = scanner.next(true);
 
       // Linebreak was uncountered
       if (token == null) {
-        numbers.add(trimCappedArray(row, rowLength));
+        numbers.add(row.toArray());
 
-        if (rowLength > maxRowLength) {
-          maxRowLength = rowLength;
+        if (row.size() > maxRowSize) {
+          maxRowSize = row.size();
         }
 
-        row = new int[1];
-        rowLength = 0;
+        row.clear();
         scanner.consumeLineBreak();
         continue;
       }
 
-      int number = Math.abs(parseDecHexInt(token));
-
-      row = addToCappedArray(row, rowLength, number);
-      ++rowLength;
+      row.add(Math.abs(parseDecHexInt(token)));
     }
 
-    if (rowLength > 0) {
-      numbers.add(trimCappedArray(row, rowLength));
+    if (row.size() > 0) {
+      numbers.add(row.toArray());
 
-      if (rowLength > maxRowLength) {
-        maxRowLength = rowLength;
+      if (row.size() > maxRowSize) {
+        maxRowSize = row.size();
       }
 
       scanner.consumeLineBreak();
@@ -79,7 +74,7 @@ public class FastReverse3839 {
     }
 
     // No need to pre-allocate any space
-    return new InputMatrix(numbers.toArray(new int[0][]), maxRowLength);
+    return new InputMatrix(numbers.toArray(new int[0][]), maxRowSize);
   }
 
   private static int parseDecHexInt(String token) {
@@ -100,24 +95,6 @@ public class FastReverse3839 {
     int type = Character.getType(character);
     return !Character.isWhitespace(character)
         && type != Character.START_PUNCTUATION && type != Character.END_PUNCTUATION;
-  }
-
-  private static int[] addToCappedArray(int[] array, int length, int item) {
-    if (length == array.length) {
-      int newLength = Math.max(length + 1, (array.length * 3) / 2);
-      array = Arrays.copyOf(array, newLength);
-    }
-
-    array[length] = item;
-    return array;
-  }
-
-  private static int[] trimCappedArray(int[] array, int length) {
-    if (array.length == length) {
-      return array;
-    }
-
-    return Arrays.copyOf(array, length);
   }
 
   private static void processMatrix(InputMatrix matrix) {
