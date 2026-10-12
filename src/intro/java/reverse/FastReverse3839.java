@@ -2,7 +2,6 @@ package intro.java.reverse;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,7 +16,8 @@ public class FastReverse3839 {
   public static void main(String[] args) {
     InputMatrix matrix;
 
-    Scanner scanner = new Scanner(new InputStreamReader(System.in, StandardCharsets.UTF_8));
+    Scanner scanner = new Scanner(new InputStreamReader(System.in, StandardCharsets.UTF_8),
+        FastReverse3839::isTokenPart);
 
     try {
       matrix = parseNumbers(scanner);
@@ -30,40 +30,56 @@ public class FastReverse3839 {
     printMatrix(matrix.numbers);
   }
 
+  private static final int[] EMPTY_INT_ARRAY = new int[0];
+
   private static InputMatrix parseNumbers(final Scanner scanner) throws IOException {
+    // NOTE: Memory issue with per-line reading avoided
     List<int[]> numbers = new ArrayList<>();
+    int[] row = new int[1];
+    int rowLength = 0;
     int maxRowLength = 0;
 
-    while (scanner.hasNextLine()) {
-      String line = scanner.nextLine(); // memory
+    while (scanner.hasNext(true)) {
+      String token = scanner.next(true);
 
-      int[] row = parseSingleLine(line);
-      numbers.add(row);
+      // Linebreak was uncountered
+      if (token == null) {
+        numbers.add(trimCappedArray(row, rowLength));
 
-      if (row.length > maxRowLength) {
-        maxRowLength = row.length;
+        if (rowLength > maxRowLength) {
+          maxRowLength = rowLength;
+        }
+
+        row = new int[1];
+        rowLength = 0;
+        scanner.consumeLineBreak();
+        continue;
       }
+
+      int number = Math.abs(parseDecHexInt(token));
+
+      row = addToCappedArray(row, rowLength, number);
+      ++rowLength;
+    }
+
+    if (rowLength > 0) {
+      numbers.add(trimCappedArray(row, rowLength));
+
+      if (rowLength > maxRowLength) {
+        maxRowLength = rowLength;
+      }
+
+      scanner.consumeLineBreak();
+    }
+
+    // Empty lines at the end of the input
+    while (scanner.hasNextLine()) {
+      numbers.add(EMPTY_INT_ARRAY);
+      scanner.consumeLineBreak();
     }
 
     // No need to pre-allocate any space
     return new InputMatrix(numbers.toArray(new int[0][]), maxRowLength);
-  }
-
-  private static int[] parseSingleLine(final String line) throws IOException {
-    int length = 0;
-    int[] numbers = new int[1];
-
-    try (Scanner scanner = new Scanner(new StringReader(line), FastReverse3839::isTokenPart)) {
-      while (scanner.hasNext()) {
-        String token = scanner.next();
-        int number = Math.abs(parseDecHexInt(token));
-
-        numbers = addToCappedArray(numbers, length, number);
-        ++length;
-      }
-    }
-
-    return Arrays.copyOf(numbers, length);
   }
 
   private static int parseDecHexInt(String token) {
@@ -95,6 +111,14 @@ public class FastReverse3839 {
 
     array[length] = item;
     return array;
+  }
+
+  private static int[] trimCappedArray(int[] array, int length) {
+    if (array.length == length) {
+      return array;
+    }
+
+    return Arrays.copyOf(array, length);
   }
 
   private static void processMatrix(InputMatrix matrix) {

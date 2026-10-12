@@ -2,18 +2,22 @@ package intro.java.reverse;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import intro.java.myscanner.Scanner;
 
 public class FastReverse {
   public static void main(String[] args) {
-    ArrayList<int[]> numbers = parseNumbers();
+    Scanner scanner = new Scanner(new InputStreamReader(System.in, StandardCharsets.UTF_8));
+    List<int[]> numbers;
 
-    if (numbers == null) {
-      System.err.println("Failed to read from input.");
+    try {
+      numbers = parseNumbers(scanner);
+    } catch (IOException exc) {
+      System.err.println("Couldn't read from the input.");
       return;
     }
 
@@ -32,41 +36,64 @@ public class FastReverse {
     }
   }
 
-  private static ArrayList<int[]> parseNumbers() {
-    Scanner scanner = new Scanner(new InputStreamReader(System.in, StandardCharsets.UTF_8));
+  private static List<int[]> parseNumbers(Scanner scanner) throws IOException {
+    List<int[]> numbers = new ArrayList<>();
+    int[] row = new int[1];
+    int rowLength = 0;
+    int maxRowLength = 0;
 
-    ArrayList<int[]> numbers = new ArrayList<>();
+    while (scanner.hasNext(true)) {
+      String token = scanner.next(true);
 
-    try {
-      while (scanner.hasNextLine()) {
-        String line = scanner.nextLine();
+      // Linebreak was uncountered
+      if (token == null) {
+        numbers.add(trimCappedArray(row, rowLength));
 
-        int[] row = parseSingleLine(line);
-        numbers.add(row);
+        if (rowLength > maxRowLength) {
+          maxRowLength = rowLength;
+        }
+
+        row = new int[1];
+        rowLength = 0;
+        scanner.consumeLineBreak();
+        continue;
       }
-    } catch (IOException exc) {
-      return null;
+
+      int number = Integer.parseInt(token);
+
+      row = addToCappedArray(row, rowLength, number);
+      ++rowLength;
+    }
+
+    if (rowLength > 0) {
+      numbers.add(trimCappedArray(row, rowLength));
+
+      if (rowLength > maxRowLength) {
+        maxRowLength = rowLength;
+      }
+
+      scanner.consumeLineBreak();
     }
 
     return numbers;
   }
 
-  private static int[] parseSingleLine(String line) throws IOException {
-    ArrayList<Integer> numbers = new ArrayList<>();
-
-    try (Scanner scanner = new Scanner(new StringReader(line))) {
-      while (scanner.hasNext()) {
-        numbers.add(scanner.nextInt());
-      }
+  // TODO: Implement capped IntArray class
+  private static int[] addToCappedArray(int[] array, int length, int item) {
+    if (length == array.length) {
+      int newLength = Math.max(length + 1, (array.length * 3) / 2);
+      array = Arrays.copyOf(array, newLength);
     }
 
-    // Convert into primitive array to reduce memory usage
-    int[] result = new int[numbers.size()];
+    array[length] = item;
+    return array;
+  }
 
-    for (int i = 0; i < result.length; ++i) {
-      result[i] = numbers.get(i);
+  private static int[] trimCappedArray(int[] array, int length) {
+    if (array.length == length) {
+      return array;
     }
 
-    return result;
+    return Arrays.copyOf(array, length);
   }
 }
