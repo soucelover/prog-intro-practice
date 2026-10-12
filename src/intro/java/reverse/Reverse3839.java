@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
+import intro.java.common.IntList;
+
 public class Reverse3839 {
   public static void main(String[] args) {
     int[][] numbers;
@@ -31,34 +33,20 @@ public class Reverse3839 {
   }
 
   private static int[] parseSingleLine(final String line) {
-    int length = 0;
-    int[] numbers = new int[1]; // :NOTE: memory usage -- was ArrayList<Integer>
+    IntList numbers = new IntList();
 
     try (Scanner scanner = new Scanner(line)) {
       while (scanner.hasNext()) {
         String token = scanner.next();
-        int number = Math.abs(Integer.parseUnsignedInt(token, 16));
-
-        numbers = addToCappedArray(numbers, length, number);
-        ++length;
+        numbers.add(Math.abs(Integer.parseUnsignedInt(token, 16)));
       }
     }
 
-    return Arrays.copyOf(numbers, length);
-  }
-
-  private static int[] addToCappedArray(int[] array, int length, int item) {
-    if (length == array.length) {
-      int newLength = Math.max(length + 1, (array.length * 3) / 2);
-      array = Arrays.copyOf(array, newLength);
-    }
-
-    array[length] = item;
-    return array;
+    return numbers.toArray();
   }
 
   private static void processMatrix(int[][] numbers) {
-    int[] columnSums = new int[0]; // :NOTE: naming -- was column_sums
+    int[] columnSums = new int[0];
 
     for (int i = 0; i < numbers.length; ++i) {
       int[] row = numbers[i];
