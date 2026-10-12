@@ -34,7 +34,8 @@ public class WordStat {
       throws IOException {
     LinkedHashMap<String, Integer> wordStats = new LinkedHashMap<>();
 
-    try (Scanner scanner = new Scanner(new FileReader(inputPath), WordStat::characterIsWordPart)) {
+    try (Scanner scanner = new Scanner(new FileReader(inputPath, StandardCharsets.UTF_8),
+        WordStat::characterIsWordPart)) {
       while (scanner.hasNext()) {
         countWordIn(wordStats, scanner.next());
       }
