@@ -22,16 +22,16 @@ public final class ReverseTest {
 
     // === 41
 
-    private static final Named<BiFunction<ExtendedRandom, Integer, String>> HEX = Named.of("Hex", (r, i) -> Integer.toHexString(i));
-    private static final Named<LongUnaryOperator> NONE = Named.of("", n -> n);
-    private static final Monoid SUM = new Monoid("Sum", 0, (a, b) -> (int) (a + b));
-    private static final Named<Op> SUM_41 = sum1(NONE);
+    public static final Named<BiFunction<ExtendedRandom, Integer, String>> HEX = Named.of("Hex", (r, i) -> Integer.toHexString(i));
+    public static final Named<LongUnaryOperator> NONE = Named.of("", n -> n);
+    public static final Monoid SUM = new Monoid("Sum", 0, (a, b) -> (int) (a + b));
+    public static final Named<Op> SUM_41 = sum1(NONE);
 
-    private static Named<Op> sum1(final Named<LongUnaryOperator> lift) {
+    public static Named<Op> sum1(final Named<LongUnaryOperator> lift) {
         return cross(lift);
     }
 
-    private static Named<Op> cross(final Named<LongUnaryOperator> lift) {
+    public static Named<Op> cross(final Named<LongUnaryOperator> lift) {
         // This code is intentionally obscure
         return Named.of(
                 "Sum1" + lift.name(),
@@ -56,15 +56,15 @@ public final class ReverseTest {
 
     // === 42
 
-    private static final Named<LongUnaryOperator> ABS = Named.of("Abs", Math::abs);
-    private static final Named<Op> SUM_42 = sum1(ABS);
+    public static final Named<LongUnaryOperator> ABS = Named.of("Abs", Math::abs);
+    public static final Named<Op> SUM_42 = sum1(ABS);
 
 
     // === 3839
 
-    private static final Named<Op> SUM_3839 = sum2(ABS);
+    public static final Named<Op> SUM_3839 = sum2(ABS);
 
-    private static Named<Op> sum2(final Named<LongUnaryOperator> lift) {
+    public static Named<Op> sum2(final Named<LongUnaryOperator> lift) {
         return Named.of("Sum2" + lift.name(), Order.DIRECT.scan2(0, lift.value()::applyAsLong, Long::sum, Long::sum));
     }
 
@@ -109,33 +109,33 @@ public final class ReverseTest {
         }
     }
 
-    private static IntStream range(final int length, final  boolean reverse) {
+    public static IntStream range(final int length, final  boolean reverse) {
         return reverse ? IntStream.iterate(length - 1, i -> i >= 0, i -> i - 1) : IntStream.range(0, length);
     }
 
 
     // === 3637
 
-    private static final Named<Op> SUM_3637 = sum2(NONE);
+    public static final Named<Op> SUM_3637 = sum2(NONE);
 
 
     // === 48
 
     static final int M = 1_000_000;
-    private static final Named<LongUnaryOperator> MOD = Named.of("Mod", a -> (a % M + M) % M);
-    private static final Named<Op> SUM_48 = sum1(MOD);
+    public static final Named<LongUnaryOperator> MOD = Named.of("Mod", a -> (a % M + M) % M);
+    public static final Named<Op> SUM_48 = sum1(MOD);
 
 
     // === 4749
 
-    private static final Named<LongUnaryOperator> ABS_MOD = Named.of("AbsMod", a -> Math.abs(a) % M);
-    private static final Named<Op> SUM_4749 = sum1(ABS_MOD);
+    public static final Named<LongUnaryOperator> ABS_MOD = Named.of("AbsMod", a -> Math.abs(a) % M);
+    public static final Named<Op> SUM_4749 = sum1(ABS_MOD);
 
 
    // === 3233
 
     public static final Named<Op> SUM_3233 = SUM.row(ABS);
-    private static final Named<BiFunction<ExtendedRandom, Integer, String>> DEC = Named.of("", (r, i) -> Integer.toString(i));
+    public static final Named<BiFunction<ExtendedRandom, Integer, String>> DEC = Named.of("", (r, i) -> Integer.toString(i));
 
     record Monoid(String name, int zero, LongBinaryOperator op) {
         private Named<Op> row(final Named<LongUnaryOperator> lift) {
@@ -148,7 +148,7 @@ public final class ReverseTest {
 
 
     // === 3435
-    private static final Named<Op> SUM_3435 = SUM.row(NONE);
+    public static final Named<Op> SUM_3435 = SUM.row(NONE);
 
 
     // === Common

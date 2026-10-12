@@ -5,12 +5,13 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.SequencedMap;
+
+import intro.java.myscanner.Scanner;
 
 public class WordStat {
   public static void main(String[] args) {
@@ -29,54 +30,14 @@ public class WordStat {
     }
   }
 
-  private static final int READER_BUFFER_SIZE = 8192;
-
   private static SequencedMap<String, Integer> analyzeFile(File inputPath)
       throws IOException {
     LinkedHashMap<String, Integer> wordStats = new LinkedHashMap<>();
 
-    try (Reader reader = new FileReader(inputPath, StandardCharsets.UTF_8)) {
-      char[] buf = new char[READER_BUFFER_SIZE];
-      int charsRead;
-
-      StringBuilder word = new StringBuilder();
-      boolean pointingAtWord = false;
-      int wordPartStart = 0;
-
-      while ((charsRead = reader.read(buf)) != -1) {
-        for (int i = 0; i < charsRead; ++i) {
-          // Word end or between words
-          if (!characterIsWordPart(buf[i])) {
-            if (!pointingAtWord) {
-              continue;
-            }
-
-            pointingAtWord = false;
-
-            if (i != 0) {
-              word.append(buf, wordPartStart, i - wordPartStart);
-            }
-
-            countWordIn(wordStats, word);
-            word.setLength(0);
-            continue;
-          }
-
-          if (!pointingAtWord) {
-            wordPartStart = i;
-            pointingAtWord = true;
-          } else if (i == 0) { // After new buffer read
-            wordPartStart = 0;
-          }
-        }
-
-        if (pointingAtWord) {
-          word.append(buf, wordPartStart, charsRead - wordPartStart);
-        }
-      }
-
-      if (pointingAtWord) {
-        countWordIn(wordStats, word);
+    try (Scanner scanner = new Scanner(new FileReader(inputPath, StandardCharsets.UTF_8),
+        WordStat::characterIsWordPart)) {
+      while (scanner.hasNext()) {
+        countWordIn(wordStats, scanner.next());
       }
     }
 
@@ -89,8 +50,8 @@ public class WordStat {
         || character == '\'';
   }
 
-  private static void countWordIn(Map<String, Integer> wordStats, StringBuilder word) {
-    wordStats.compute(word.toString().toLowerCase(Locale.ROOT), (k, v) -> (v == null) ? 1 : v + 1);
+  private static void countWordIn(Map<String, Integer> wordStats, String word) {
+    wordStats.compute(word.toLowerCase(Locale.ROOT), (k, v) -> (v == null) ? 1 : v + 1);
   }
 
   private static void outputWordStats(SequencedMap<String, Integer> wordStats, File outputPath)
