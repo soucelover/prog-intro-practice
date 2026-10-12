@@ -297,4 +297,11 @@ public class IntList {
   public int[] toArray() {
     return Arrays.copyOf(array, size);
   }
+
+  public static IntList of(int e1) {
+    int[] array = new int[Math.max(1, DEFAULT_CAPACITY)];
+    array[0] = e1;
+
+    return new IntList(array, 1);
+  }
 }
