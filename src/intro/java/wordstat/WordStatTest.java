@@ -1,4 +1,4 @@
-package intro.java.word_stat;
+package intro.java.wordstat;
 
 import base.Named;
 import base.Pair;
@@ -106,7 +106,7 @@ public final class WordStatTest {
             .variant("41",   ORDER_1.with("41",   PREFIXES))
             .variant("42",   ORDER_1.with("42",   SHINGLES))
             .variant("3839", ORDER_2.with("3839", SHINGLES))
-            .variant("3536", ORDER_2.with("3637", SUFFIXES))
+            .variant("3637", ORDER_2.with("3637", SUFFIXES))
             .variant("48",   ORDER_1.with("48",   DEDUP_A))
             .variant("4749", ORDER_1.with("4749", DEDUP_D))
             .variant("3233", ORDER_2.with("3233", DEDUP_C))

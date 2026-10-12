@@ -2,22 +2,18 @@
 
 [CmdletBinding(PositionalBinding = $false)]
 param (
+    [switch]$ForDebug,
     [Parameter(ValueFromRemainingArguments)]
-    [object[]]$Arguments
+    [object[]]$Arguments = @("3839")
 )
 
 $ErrorActionPreference = "Stop"
 Set-StrictMode -Version Latest
 $PSNativeCommandUseErrorActionPreference = $true
 
-$JarFile = .\scripts\build.ps1 -Name Reverse
+$JarFile = .\scripts\build.ps1 -Name ReverseTest -ForDebug:$ForDebug
+$Class = "intro.java.reverse.ReverseTest"
 
 Write-Host "Launching the application...`n"
 
-$Class = "intro.java.reverse.ReverseTest"
-
-if ($null -eq $Arguments) {
-    java -enableassertions --class-path $JarFile $Class 3839
-} else {
-    java -enableassertions --class-path $JarFile $Class @Arguments
-}
+java -enableassertions --class-path $JarFile $Class @Arguments

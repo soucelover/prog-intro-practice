@@ -59,7 +59,7 @@ public final class SumTest {
         return addSpaces("Control", inner,
                 "\r\n\t",
                 "\u0000\u0001\u0002\u0003\u0004\u0005\u0006\u0007\u0008\u0009\u000b\u000c\u000e"
-                        + "\u000f\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001a\u001b\u001c\u001d"
+                        + "\u000f\u0010\u0011\u0012\u0014\u0015\u0016\u0017\u0018\u0019\u001a\u001c\u001d"
                         + "\u001e\u001f\u007f\u0080\u0081\u0082\u0083\u0084\u0085\u0086\u0087\u0088\u0089\u008a\u008b"
                         + "\u008c\u008d\u008e\u008f\u0090\u0091\u0092\u0093\u0094\u0095\u0096\u0097\u0098\u0099\u009a"
                         + "\u009b\u009c\u009d\u009e\u009f"
@@ -95,6 +95,46 @@ public final class SumTest {
     }
 
 
+    // === 3637
+
+    private static final Named<Supplier<SumTester<Long>>> LONG = Named.of("Long", () -> new SumTester<>(
+            Long::sum, n -> n, (r, max) -> r.getRandom().nextLong() % max, TO_STRING,
+            10L, 100L, (long) Integer.MAX_VALUE, Long.MAX_VALUE)
+            .test(12345678901234567L, " +12345678901234567 ")
+            .test(0L, " +12345678901234567 -12345678901234567")
+            .test(0L, " +12345678901234567 -12345678901234567"));
+
+
+    // === 3435
+
+    private static final Named<Supplier<SumTester<Float>>> FLOAT = Named.of("Float", () -> new SumTester<>(
+            Float::sum, n -> (float) n, (r, max) -> (r.getRandom().nextFloat() - 0.5f) * 2 * max,
+            (expected, out) ->
+                    Asserts.assertEquals("Sum", expected.doubleValue(), Float.parseFloat(out), 1e-5),
+            10.0f, 0.01f, 1e20f, Float.MAX_VALUE / 10000)
+            .test(5, "2.5 2.5")
+            .test(0, "1e10 -1e10")
+            .testT(2e10f, "1.5e10 0.5E10"));
+
+    // === 48
+
+    private static <T extends Number> Named<Op<T>> quote(final Named<SumTest.Op<T>> inner) {
+        //noinspection UnnecessaryUnicodeEscape
+        return addSpaces("Quote", inner,
+                "\"'",
+                "\u00bb\u2019\u201d\u203a\u2e03\u2e05\u2e0a\u2e0d\u2e1d\u2e21",
+                "\u00ab\u2018\u201b\u201c\u201f\u2039\u2e02\u2e04\u2e09\u2e0c\u2e1c\u2e20"
+        );
+    }
+
+
+    // === 4749
+
+    private static final Named<Supplier<SumTester<Byte>>> BYTE = Named.of("Byte", () -> new SumTester<>(
+            (a, b) -> (byte) (a + b), n -> (byte) n, (r, max) -> (byte) (r.getRandom().nextLong() % max), TO_STRING,
+            (byte) 10, (byte) 100, Byte.MAX_VALUE));
+
+
     // === Common
 
     /* package-private */ static <T extends Number> Consumer<TestCounter> variant(
@@ -128,9 +168,14 @@ public final class SumTest {
     public static Selector selector(final Class<?> owner, final Named<Function<String, Runner>> runner) {
         return new Selector(owner)
                 .variant("Base",            variant("", runner, BASE, plain()))
+                .variant("3233",            variant("3233", runner, FLOAT, plain()))
+                .variant("3435",            variant("3435", runner, FLOAT, brackets(plain())))
+                .variant("3637",            variant("3637", runner, LONG, brackets(plain())))
                 .variant("3839",            variant("3839", runner, BIG_INTEGER, brackets(plain())))
                 .variant("41",              variant("41"  , runner, SHORT, currency(plain())))
                 .variant("42",              variant("42"  , runner, SHORT, control(plain())))
+                .variant("48",              variant("48"  , runner, SHORT, quote(plain())))
+                .variant("4749",            variant("4749", runner, BYTE, quote(plain())))
                 ;
     }
 

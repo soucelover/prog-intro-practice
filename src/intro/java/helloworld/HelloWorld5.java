@@ -1,4 +1,4 @@
-package intro.java.hello_world;
+package intro.java.helloworld;
 
 /**
  * Greets users specified by command line arguments.

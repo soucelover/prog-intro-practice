@@ -1,4 +1,4 @@
-package intro.java.hello_world;
+package intro.java.helloworld;
 
 /** Prints greeting on the console. */
 public class ConsoleGreeter {

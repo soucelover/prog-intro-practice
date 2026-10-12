@@ -1,4 +1,4 @@
-package intro.java.run_me;
+package intro.java.runme;
 
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;

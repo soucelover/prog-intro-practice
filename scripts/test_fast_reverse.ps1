@@ -4,21 +4,16 @@
 param (
     [switch]$ForDebug,
     [Parameter(ValueFromRemainingArguments)]
-    [object[]]$Arguments
+    [object[]]$Arguments = @("3839")
 )
 
 $ErrorActionPreference = "Stop"
 Set-StrictMode -Version Latest
 $PSNativeCommandUseErrorActionPreference = $true
 
-$JarFile = .\scripts\build.ps1 -Name FastReverse -ForDebug:$ForDebug
+$JarFile = .\scripts\build.ps1 -Name FastReverseTest -ForDebug:$ForDebug
+$Class = "intro.java.reverse.FastReverseTest"
 
 Write-Host "Launching the application...`n"
 
-$Class = "intro.java.reverse.FastReverseTest"
-
-if ($null -eq $Arguments) {
-    java -enableassertions --class-path $JarFile $Class 3839
-} else {
-    java -enableassertions --class-path $JarFile $Class @Arguments
-}
+java -enableassertions --class-path $JarFile $Class @Arguments
