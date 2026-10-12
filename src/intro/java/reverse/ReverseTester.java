@@ -100,7 +100,7 @@ public final class ReverseTester {
     }
 
     private void run(final TestCounter counter, final int maxSize) {
-        new Checker(counter, maxSize, Runner.packages("", "reverse").std(name), spaces).test();
+        new Checker(counter, maxSize, Runner.packages("", "reverse", "intro.java.reverse").std(name), spaces).test();
     }
 
     @Override
