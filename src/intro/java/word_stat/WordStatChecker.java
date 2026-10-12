@@ -30,7 +30,8 @@ public final class WordStatChecker extends BaseChecker {
     private WordStatChecker(
             final String className,
             final Function<String[][], ? extends List<? extends Pair<?, ?>>> processor,
-            final TestCounter counter) {
+            final TestCounter counter
+    ) {
         super(counter);
         main = new MainChecker(RUNNER.files(className));
         this.processor = processor;
@@ -40,7 +41,8 @@ public final class WordStatChecker extends BaseChecker {
             final TestCounter counter,
             final String className,
             final Function<String[][], ? extends List<? extends Pair<?, ?>>> processor,
-            final Consumer<WordStatChecker> tests) {
+            final Consumer<WordStatChecker> tests
+    ) {
         tests.accept(new WordStatChecker(className, processor, counter));
     }
 
@@ -50,8 +52,7 @@ public final class WordStatChecker extends BaseChecker {
 
     public void test(final Pattern pattern, final String... lines) {
         final String[][] data = Arrays.stream(lines)
-                .map(line -> Arrays.stream(pattern.split(line)).filter(Predicate.not(String::isEmpty))
-                        .toArray(String[]::new))
+                .map(line -> Arrays.stream(pattern.split(line)).filter(Predicate.not(String::isEmpty)).toArray(String[]::new))
                 .toArray(String[][]::new);
         test(lines, processor.apply(data));
     }
@@ -63,7 +64,8 @@ public final class WordStatChecker extends BaseChecker {
             final int lines,
             final String chars,
             final String delimiters,
-            final Function<String[][], List<? extends Pair<?, ?>>> processor) {
+            final Function<String[][], List<? extends Pair<?, ?>>> processor
+    ) {
         final String[] words = generateWords(wordLength, totalWords, chars);
         final String[][] text = generateTest(lines, words, wordsPerLine);
         test(input(text, delimiters), processor.apply(text));
@@ -75,7 +77,8 @@ public final class WordStatChecker extends BaseChecker {
             final int wordsPerLine,
             final int lines,
             final String chars,
-            final String delimiters) {
+            final String delimiters
+    ) {
         randomTest(wordLength, totalWords, wordsPerLine, lines, chars, delimiters, processor::apply);
     }
 
@@ -92,8 +95,7 @@ public final class WordStatChecker extends BaseChecker {
 
     private String[] generateWords(final int wordLength, final int totalWords, final String chars) {
         final String allChars = chars.chars().anyMatch(Character::isUpperCase)
-                ? chars
-                : chars + chars.toUpperCase(Locale.ROOT);
+                ? chars : chars + chars.toUpperCase(Locale.ROOT);
         return IntStream.range(0, totalWords)
                 .mapToObj(i -> random().randomString(allChars, wordLength / 2, wordLength))
                 .toArray(String[]::new);

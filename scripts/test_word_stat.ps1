@@ -17,7 +17,7 @@ Write-Host "Launching the application...`n"
 $Class = "intro.java.word_stat.WordStatTest"
 
 if ($null -eq $Arguments) {
-    java -enableassertions --class-path $JarFile $Class Base
+    java -enableassertions --class-path $JarFile $Class 3839
 } else {
     java -enableassertions --class-path $JarFile $Class @Arguments
 }
