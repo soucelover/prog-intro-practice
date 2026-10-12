@@ -157,7 +157,7 @@ public final class SumTest {
 
 
     /* package-private */ static final Named<Function<String, Runner>> RUNNER =
-            Named.of("", Runner.packages("", "sum")::args);
+            Named.of("", Runner.packages("", "sum", "intro.java.sum")::args);
 
     public static final Selector SELECTOR = selector(SumTest.class, RUNNER);
 

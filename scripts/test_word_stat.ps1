@@ -14,7 +14,7 @@ $JarFile = .\scripts\build.ps1 -Name Sum
 
 Write-Host "Launching the application...`n"
 
-$Class = "intro.java.word_stat.WordStatTest"
+$Class = "intro.java.wordstat.WordStatTest"
 
 if ($null -eq $Arguments) {
     java -enableassertions --class-path $JarFile $Class 3839
