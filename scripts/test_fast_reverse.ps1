@@ -2,6 +2,7 @@
 
 [CmdletBinding(PositionalBinding = $false)]
 param (
+    [switch]$ForDebug,
     [Parameter(ValueFromRemainingArguments)]
     [object[]]$Arguments
 )
@@ -10,7 +11,7 @@ $ErrorActionPreference = "Stop"
 Set-StrictMode -Version Latest
 $PSNativeCommandUseErrorActionPreference = $true
 
-$JarFile = .\scripts\build.ps1 -Name FastReverse
+$JarFile = .\scripts\build.ps1 -Name FastReverse -ForDebug:$ForDebug
 
 Write-Host "Launching the application...`n"
 
