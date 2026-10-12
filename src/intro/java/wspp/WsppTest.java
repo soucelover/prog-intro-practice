@@ -1,4 +1,4 @@
-package wspp;
+package intro.java.wspp;
 
 import base.Named;
 import base.Selector;

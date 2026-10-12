@@ -1,4 +1,4 @@
-package wordStat;
+package intro.java.wordstat;
 
 import base.*;
 

@@ -4,4 +4,4 @@
  *
  * @author Georgiy Korneev (kgeorgiy@kgeorgiy.info)
  */
-package wspp;
+package intro.java.wspp;

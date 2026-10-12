@@ -1,10 +1,10 @@
-package reverse;
+package intro.java.reverse;
 
 import base.ExtendedRandom;
 import base.Named;
 import base.Selector;
 import base.TestCounter;
-import reverse.ReverseTester.Op;
+import intro.java.reverse.ReverseTester.Op;
 
 import java.util.Arrays;
 import java.util.function.*;

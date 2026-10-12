@@ -1,4 +1,4 @@
-package sum;
+package intro.java.sum;
 
 import base.*;
 

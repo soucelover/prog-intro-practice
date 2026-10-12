@@ -1,11 +1,11 @@
-package wspp;
+package intro.java.wspp;
 
 import base.ExtendedRandom;
 import base.Named;
 import base.Pair;
 import base.TestCounter;
-import wordStat.WordStatChecker;
-import wordStat.WordStatTester;
+import intro.java.wordstat.WordStatChecker;
+import intro.java.wordstat.WordStatTester;
 
 import java.nio.charset.StandardCharsets;
 import java.util.*;

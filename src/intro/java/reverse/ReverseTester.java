@@ -1,4 +1,4 @@
-package reverse;
+package intro.java.reverse;
 
 import base.*;
 
