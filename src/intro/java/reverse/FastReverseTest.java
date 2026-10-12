@@ -4,7 +4,7 @@ import base.ExtendedRandom;
 import base.Named;
 import base.Selector;
 import base.TestCounter;
-import intro.java.word_stat.WordStatTest;
+import intro.java.wordstat.WordStatTest;
 
 import java.util.Locale;
 import java.util.function.BiFunction;

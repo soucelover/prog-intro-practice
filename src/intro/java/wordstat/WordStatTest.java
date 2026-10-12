@@ -1,4 +1,4 @@
-package intro.java.word_stat;
+package intro.java.wordstat;
 
 import base.Named;
 import base.Pair;

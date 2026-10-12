@@ -4,4 +4,4 @@
  *
  * @author Georgiy Korneev (kgeorgiy@kgeorgiy.info)
  */
-package intro.java.word_stat;
+package intro.java.wordstat;

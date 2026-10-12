@@ -1,4 +1,4 @@
-package intro.java.hello_world;
+package intro.java.helloworld;
 
 /**
  * Prints {@code Hello, %arg%!} for each command line argument.

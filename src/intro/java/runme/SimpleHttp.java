@@ -1,4 +1,5 @@
-package intro.java.run_me;
+package intro.java.runme;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
