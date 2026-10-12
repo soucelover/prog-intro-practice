@@ -4,14 +4,8 @@
 package intro.java.myscanner;
 
 import java.io.Closeable;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.StringReader;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.NoSuchElementException;
@@ -45,24 +39,24 @@ public class Scanner implements Closeable {
    */
   private int end = 0;
 
-  public Scanner(Reader reader) {
+  @FunctionalInterface
+  public interface CharPredicate {
+    boolean test(char arg);
+  }
+
+  private final CharPredicate tokenPredicate;
+
+  public Scanner(Reader reader, CharPredicate tokenPredicate) {
     Objects.requireNonNull(reader);
 
     this.reader = reader;
 
     buffer = new char[BUFFER_SIZE];
+    this.tokenPredicate = tokenPredicate;
   }
 
-  public Scanner(String source) {
-    this(new StringReader(source));
-  }
-
-  public Scanner(InputStream source) {
-    this(new InputStreamReader(source, StandardCharsets.UTF_8));
-  }
-
-  public Scanner(File file) throws IOException {
-    this(new FileReader(file));
+  public Scanner(Reader reader) {
+    this(reader, Scanner::characterIsTokenPart);
   }
 
   public void close() throws IOException {
@@ -136,11 +130,6 @@ public class Scanner implements Closeable {
 
   // Token Parsing
 
-  @FunctionalInterface
-  public interface CharPredicate {
-    boolean test(char arg);
-  }
-
   public static boolean characterIsTokenPart(char character) {
     return !Character.isWhitespace(character);
   }
@@ -148,12 +137,12 @@ public class Scanner implements Closeable {
   /**
    * How many characters to skip before next token occurs?
    */
-  private int nextSkippedCount(CharPredicate predicate) throws IOException {
+  private int nextSkippedCount() throws IOException {
     // assume state is 'good'
     int count = 0;
 
     while (true) {
-      if ((position + count == end && !readInput()) || predicate.test(buffer[position + count])) {
+      if ((position + count == end && !readInput()) || tokenPredicate.test(buffer[position + count])) {
         return count;
       }
 
@@ -161,24 +150,20 @@ public class Scanner implements Closeable {
     }
   }
 
-  public boolean hasNext(CharPredicate predicate) throws IOException {
+  public boolean hasNext() throws IOException {
     ensureGoodState();
 
     if (position == end && state == State.EOF) {
       return false;
     }
 
-    final int startOffset = nextSkippedCount(predicate);
+    final int startOffset = nextSkippedCount();
 
     if (position + startOffset == end && !readInput()) {
       return false;
     }
 
-    return predicate.test(buffer[position + startOffset]);
-  }
-
-  public boolean hasNext() throws IOException {
-    return hasNext(Scanner::characterIsTokenPart);
+    return tokenPredicate.test(buffer[position + startOffset]);
   }
 
   private record TokenInfo(int startOffset, int length) {
@@ -191,9 +176,9 @@ public class Scanner implements Closeable {
     return new String(buffer, position + token.startOffset, token.length);
   }
 
-  private TokenInfo findNextToken(CharPredicate predicate) throws IOException {
+  private TokenInfo findNextToken() throws IOException {
     // assume state is 'good'
-    final int startOffset = nextSkippedCount(predicate);
+    final int startOffset = nextSkippedCount();
     int pos = position + startOffset;
     int length = 0;
 
@@ -206,7 +191,7 @@ public class Scanner implements Closeable {
         pos = position + startOffset; // position might be changed
       }
 
-      if (!predicate.test(buffer[pos + length])) {
+      if (!tokenPredicate.test(buffer[pos + length])) {
         return new TokenInfo(startOffset, length);
       }
 
@@ -214,14 +199,14 @@ public class Scanner implements Closeable {
     }
   }
 
-  public String next(CharPredicate predicate) throws IOException {
+  public String next() throws IOException {
     ensureGoodState();
 
     if (position == end && state == State.EOF) {
       throw new NoSuchElementException("No more tokens to read.");
     }
 
-    TokenInfo tokenInfo = findNextToken(predicate);
+    TokenInfo tokenInfo = findNextToken();
 
     if (tokenInfo.length == 0) {
       throw new NoSuchElementException("No more tokens to read.");
@@ -233,10 +218,6 @@ public class Scanner implements Closeable {
     return token;
   }
 
-  public String next() throws IOException {
-    return next(Scanner::characterIsTokenPart);
-  }
-
   // Integer parsing
 
   public boolean hasNextInt() throws IOException {
@@ -246,7 +227,7 @@ public class Scanner implements Closeable {
       return false;
     }
 
-    TokenInfo token = findNextToken(Scanner::characterIsTokenPart);
+    TokenInfo token = findNextToken();
 
     if (token.length == 0) {
       return false;
@@ -267,7 +248,7 @@ public class Scanner implements Closeable {
       throw new NoSuchElementException("No more tokens to read.");
     }
 
-    TokenInfo token = findNextToken(Scanner::characterIsTokenPart);
+    TokenInfo token = findNextToken();
 
     if (token.length == 0) {
       throw new NoSuchElementException("No more tokens to read.");

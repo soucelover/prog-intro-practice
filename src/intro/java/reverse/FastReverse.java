@@ -1,6 +1,9 @@
 package intro.java.reverse;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 import intro.java.myscanner.Scanner;
@@ -30,7 +33,7 @@ public class FastReverse {
   }
 
   private static ArrayList<int[]> parseNumbers() {
-    Scanner scanner = new Scanner(System.in);
+    Scanner scanner = new Scanner(new InputStreamReader(System.in, StandardCharsets.UTF_8));
 
     ArrayList<int[]> numbers = new ArrayList<>();
 
@@ -51,7 +54,7 @@ public class FastReverse {
   private static int[] parseSingleLine(String line) throws IOException {
     ArrayList<Integer> numbers = new ArrayList<>();
 
-    try (Scanner scanner = new Scanner(line)) {
+    try (Scanner scanner = new Scanner(new StringReader(line))) {
       while (scanner.hasNext()) {
         numbers.add(scanner.nextInt());
       }

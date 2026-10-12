@@ -2,6 +2,7 @@ package intro.java.word_stat;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -33,9 +34,9 @@ public class WordStat {
       throws IOException {
     LinkedHashMap<String, Integer> wordStats = new LinkedHashMap<>();
 
-    try (Scanner scanner = new Scanner(inputPath)) {
-      while (scanner.hasNext(WordStat::characterIsWordPart)) {
-        countWordIn(wordStats, scanner.next(WordStat::characterIsWordPart));
+    try (Scanner scanner = new Scanner(new FileReader(inputPath), WordStat::characterIsWordPart)) {
+      while (scanner.hasNext()) {
+        countWordIn(wordStats, scanner.next());
       }
     }
 

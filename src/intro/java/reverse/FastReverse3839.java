@@ -1,6 +1,9 @@
 package intro.java.reverse;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,7 +17,9 @@ public class FastReverse3839 {
   public static void main(String[] args) {
     InputMatrix matrix;
 
-    try (Scanner scanner = new Scanner(System.in)) {
+    Scanner scanner = new Scanner(new InputStreamReader(System.in, StandardCharsets.UTF_8));
+
+    try {
       matrix = parseNumbers(scanner);
     } catch (IOException exc) {
       System.err.println("Couldn't read from the input.");
@@ -48,9 +53,9 @@ public class FastReverse3839 {
     int length = 0;
     int[] numbers = new int[1];
 
-    try (Scanner scanner = new Scanner(line)) {
-      while (scanner.hasNext(FastReverse3839::isTokenPart)) {
-        String token = scanner.next(FastReverse3839::isTokenPart);
+    try (Scanner scanner = new Scanner(new StringReader(line), FastReverse3839::isTokenPart)) {
+      while (scanner.hasNext()) {
+        String token = scanner.next();
         int number = Math.abs(parseDecHexInt(token));
 
         numbers = addToCappedArray(numbers, length, number);
