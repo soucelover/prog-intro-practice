@@ -21,6 +21,16 @@ public final class WsppTest {
     private static final Named<String> LET_NUM = Named.of("LetNum", "XHB7Tmx9");
 
 
+    // === 42
+    private static final Named<IntFunction<IntStream>> EVEN = Named.of("Even", size -> IntStream.range(0, size).filter(i -> (i & 1) == 1));
+
+
+    // === 3839
+    private static final Named<String> CONNECT = Named.of("Connect", "XHB7UGN9");
+    private static final Named<WsppTester.Cmp> SORTED_R = cmp("SortedR",
+            Map.Entry.<String, Integer>comparingByKey().reversed());
+
+
     // === Base
     public static Named<WsppTester.Cmp> cmp(final String name, final Comparator<Map.Entry<String, Integer>> comparator) {
         return Named.of(name, new WsppTester.Cmp(comparator, false));
@@ -45,7 +55,9 @@ public final class WsppTest {
 
     public static final Selector SELECTOR = new Selector(WsppTester.class)
             .variant("Base",            variant("", INPUT, ALL, WSPP, NONE))
+            .variant("3839",            variant("3839", SORTED_R, EVEN, LOCAL, CONNECT))
             .variant("41",              variant("41",   SORTED, ODD, LOCAL, LET_NUM))
+            .variant("42",              variant("42",   SORTED, EVEN, LOCAL, LET_NUM))
             ;
 
     private WsppTest() {
