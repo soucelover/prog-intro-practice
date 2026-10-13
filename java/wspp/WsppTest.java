@@ -31,6 +31,10 @@ public final class WsppTest {
             Map.Entry.<String, Integer>comparingByKey().reversed());
 
 
+    // === 3637
+    private static final Named<String> CURRENCY = Named.of("Currency", "XHB7U2N9");
+
+
     // === Base
     public static Named<WsppTester.Cmp> cmp(final String name, final Comparator<Map.Entry<String, Integer>> comparator) {
         return Named.of(name, new WsppTester.Cmp(comparator, false));
@@ -55,6 +59,7 @@ public final class WsppTest {
 
     public static final Selector SELECTOR = new Selector(WsppTester.class)
             .variant("Base",            variant("", INPUT, ALL, WSPP, NONE))
+            .variant("3637",            variant("3637", SORTED_R, ODD, LOCAL, CURRENCY))
             .variant("3839",            variant("3839", SORTED_R, EVEN, LOCAL, CONNECT))
             .variant("41",              variant("41",   SORTED, ODD, LOCAL, LET_NUM))
             .variant("42",              variant("42",   SORTED, EVEN, LOCAL, LET_NUM))

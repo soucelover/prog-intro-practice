@@ -54,6 +54,14 @@ include_toc: true
     * В словах могут дополнительно встречаться
       [соединители](https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Character.html#CONNECTOR_PUNCTUATION)
     * Класс должен иметь имя `Wspp3839`
+ * *3637*
+    * В выходном файле слова должны быть упорядочены
+      в обратном лексикографическом порядке
+    * Вместо всех вхождений в файле надо указывать
+      только нечётные вхождения в строке
+    * В словах могут дополнительно встречаться
+      [знаки валют](https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Character.html#CURRENCY_SYMBOL)
+    * Класс должен иметь имя `Wspp3637`
 
 
 ## Домашнее задание 5. Свой сканнер
