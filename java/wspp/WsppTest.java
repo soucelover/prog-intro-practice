@@ -14,6 +14,13 @@ import java.util.stream.IntStream;
  * @author Georgiy Korneev (kgeorgiy@kgeorgiy.info)
  */
 public final class WsppTest {
+    // === 41
+    private static final Named<WsppTester.Cmp> SORTED = cmp("Sorted", Map.Entry.comparingByKey());
+    private static final Named<IntFunction<IntStream>> ODD = Named.of("Odd", size -> IntStream.range(0, size).filter(i -> (i & 1) == 0));
+    private static final Named<WsppTester.Extractor<Integer>> LOCAL = Named.of("L", (r, l, L, g, G) -> l);
+    private static final Named<String> LET_NUM = Named.of("LetNum", "XHB7Tmx9");
+
+
     // === Base
     public static Named<WsppTester.Cmp> cmp(final String name, final Comparator<Map.Entry<String, Integer>> comparator) {
         return Named.of(name, new WsppTester.Cmp(comparator, false));
@@ -38,6 +45,7 @@ public final class WsppTest {
 
     public static final Selector SELECTOR = new Selector(WsppTester.class)
             .variant("Base",            variant("", INPUT, ALL, WSPP, NONE))
+            .variant("41",              variant("41",   SORTED, ODD, LOCAL, LET_NUM))
             ;
 
     private WsppTest() {

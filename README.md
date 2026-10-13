@@ -18,6 +18,14 @@ include_toc: true
         [WsppTester.java](java/wspp/WsppTester.java)
     * Откомпилированные тесты: [WsppTest.jar](artifacts/WsppTest.jar)
         * Аргументы командной строки: модификации
+ * *41*
+    * В выходном файле слова должны быть упорядочены
+      в лексикографическом порядке
+    * Вместо всех вхождений в файле надо указывать
+      только нечётные вхождения
+    * В словах могут дополнительно встречаться
+      [числа-буквы](https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Character.html#LETTER_NUMBER)
+    * Класс должен иметь имя `Wspp41`
 
 
 ## Домашнее задание 5. Свой сканнер
