@@ -17,11 +17,15 @@ public class IntList {
   }
 
   public IntList(int initialCapacity) {
+    this(initialArray(initialCapacity), 0);
+  }
+
+  private static int[] initialArray(int initialCapacity) {
     if (initialCapacity < 0) {
       throw new IllegalArgumentException("Negative capacity is not allowed.");
     }
 
-    this(new int[initialCapacity], 0);
+    return new int[initialCapacity];
   }
 
   public IntList() {
