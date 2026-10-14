@@ -35,6 +35,10 @@ public final class WsppTest {
     private static final Named<String> CURRENCY = Named.of("Currency", "XHB7U2N9");
 
 
+    // === 48
+    private static final Named<WsppTester.Extractor<String>> POSITION_LB = Named.of("PositionLB", (r, l, L, g, G) -> r + ":" + l);
+    
+
     // === Base
     public static Named<WsppTester.Cmp> cmp(final String name, final Comparator<Map.Entry<String, Integer>> comparator) {
         return Named.of(name, new WsppTester.Cmp(comparator, false));
@@ -63,6 +67,7 @@ public final class WsppTest {
             .variant("3839",            variant("3839", SORTED_R, EVEN, LOCAL, CONNECT))
             .variant("41",              variant("41",   SORTED, ODD, LOCAL, LET_NUM))
             .variant("42",              variant("42",   SORTED, EVEN, LOCAL, LET_NUM))
+            .variant("48",              variant("48",   SORTED, ALL, POSITION_LB, LET_NUM))
             ;
 
     private WsppTest() {

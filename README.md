@@ -62,6 +62,14 @@ include_toc: true
     * В словах могут дополнительно встречаться
       [знаки валют](https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Character.html#CURRENCY_SYMBOL)
     * Класс должен иметь имя `Wspp3637`
+ * *48*
+    * В выходном файле слова должны быть упорядочены
+      в лексикографическом порядке
+    * Вместо номеров вхождений во всем файле надо указывать
+      `<номер строки>:<номер в строке>`
+    * В словах могут дополнительно встречаться
+      [числа-буквы](https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Character.html#LETTER_NUMBER)
+    * Класс должен иметь имя `Wspp48`
 
 
 ## Домашнее задание 5. Свой сканнер
