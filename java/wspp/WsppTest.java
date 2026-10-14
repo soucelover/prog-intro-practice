@@ -37,7 +37,6 @@ public final class WsppTest {
 
     // === 48
     private static final Named<WsppTester.Extractor<String>> POSITION_LB = Named.of("PositionLB", (r, l, L, g, G) -> r + ":" + l);
-    
 
     // === Base
     public static Named<WsppTester.Cmp> cmp(final String name, final Comparator<Map.Entry<String, Integer>> comparator) {
@@ -68,6 +67,7 @@ public final class WsppTest {
             .variant("41",              variant("41",   SORTED, ODD, LOCAL, LET_NUM))
             .variant("42",              variant("42",   SORTED, EVEN, LOCAL, LET_NUM))
             .variant("48",              variant("48",   SORTED, ALL, POSITION_LB, LET_NUM))
+            .variant("4749",            variant("4749", SORTED_R, ALL, POSITION_LB, CURRENCY))
             ;
 
     private WsppTest() {
