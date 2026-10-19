@@ -39,10 +39,10 @@ Push-Location $Destination
 try {
     $ClassFiles = Get-ChildItem -Filter "*.class" -Recurse -File | Resolve-Path -Relative
     
-    jar cvfm .\$Name.jar .\MANIFEST.MF $ClassFiles | Out-Host
+    jar cvfm "$Name.jar" "MANIFEST.MF" $ClassFiles | Out-Host
 }
 finally {
     Pop-Location
 }
 
-return ("$Destination\$Name.jar" | Resolve-Path)
+return Resolve-Path -Path "$Destination\$Name.jar"
