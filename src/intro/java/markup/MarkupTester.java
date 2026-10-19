@@ -1,4 +1,4 @@
-package markup;
+package intro.java.markup;
 
 import base.Asserts;
 import base.BaseChecker;

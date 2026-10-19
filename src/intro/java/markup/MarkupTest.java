@@ -1,4 +1,4 @@
-package markup;
+package intro.java.markup;
 
 import base.Selector;
 import base.TestCounter;

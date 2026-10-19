@@ -4,4 +4,4 @@
  *
  * @author Georgiy Korneev (kgeorgiy@kgeorgiy.info)
  */
-package markup;
+package intro.java.markup;
