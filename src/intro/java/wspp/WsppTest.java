@@ -14,6 +14,37 @@ import java.util.stream.IntStream;
  * @author Georgiy Korneev (kgeorgiy@kgeorgiy.info)
  */
 public final class WsppTest {
+    // === 41
+    private static final Named<WsppTester.Cmp> SORTED = cmp("Sorted", Map.Entry.comparingByKey());
+    private static final Named<IntFunction<IntStream>> ODD = Named.of("Odd", size -> IntStream.range(0, size).filter(i -> (i & 1) == 0));
+    private static final Named<WsppTester.Extractor<Integer>> LOCAL = Named.of("L", (r, l, L, g, G) -> l);
+    private static final Named<String> LET_NUM = Named.of("LetNum", "XHB7Tmx9");
+
+
+    // === 42
+    private static final Named<IntFunction<IntStream>> EVEN = Named.of("Even", size -> IntStream.range(0, size).filter(i -> (i & 1) == 1));
+
+
+    // === 3839
+    private static final Named<String> CONNECT = Named.of("Connect", "XHB7UGN9");
+    private static final Named<WsppTester.Cmp> SORTED_R = cmp("SortedR",
+            Map.Entry.<String, Integer>comparingByKey().reversed());
+
+
+    // === 3637
+    private static final Named<String> CURRENCY = Named.of("Currency", "XHB7U2N9");
+
+
+    // === 48
+    private static final Named<WsppTester.Extractor<String>> POSITION_LB = Named.of("PositionLB", (r, l, L, g, G) -> r + ":" + l);
+
+
+    // === 3435
+    public static Named<WsppTester.Cmp> b(final Named<WsppTester.Cmp> comparator) {
+        return Named.of(comparator.name() + "B", comparator.value().b());
+    }
+
+
     // === Base
     public static Named<WsppTester.Cmp> cmp(final String name, final Comparator<Map.Entry<String, Integer>> comparator) {
         return Named.of(name, new WsppTester.Cmp(comparator, false));
@@ -38,6 +69,14 @@ public final class WsppTest {
 
     public static final Selector SELECTOR = new Selector(WsppTester.class)
             .variant("Base",            variant("", INPUT, ALL, WSPP, NONE))
+            .variant("3233",            variant("3233", INPUT, ALL, POSITION_LB, NONE))
+            .variant("3435",            variant("3435", b(INPUT), ALL, POSITION_LB, NONE))
+            .variant("3637",            variant("3637", SORTED_R, ODD, LOCAL, CURRENCY))
+            .variant("3839",            variant("3839", SORTED_R, EVEN, LOCAL, CONNECT))
+            .variant("41",              variant("41",   SORTED, ODD, LOCAL, LET_NUM))
+            .variant("42",              variant("42",   SORTED, EVEN, LOCAL, LET_NUM))
+            .variant("48",              variant("48",   SORTED, ALL, POSITION_LB, LET_NUM))
+            .variant("4749",            variant("4749", SORTED_R, ALL, POSITION_LB, CURRENCY))
             ;
 
     private WsppTest() {
