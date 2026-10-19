@@ -313,27 +313,24 @@ public class Scanner implements Closeable {
 
   private int findLineBreakLength(int offset) throws IOException {
     // Assume position + offset < end and state is 'good'
-    switch (buffer[position + offset]) {
-      case '\n':
-      case '\u0085':
-      case '\u2028':
-      case '\u2029':
-        return 1;
-      case '\r':
-        ++offset;
+    char c = buffer[position + offset];
 
-        if ((position + offset == end && !readInput())) {
-          return 1;
-        }
-
-        if (buffer[position + offset] == '\n') {
-          return 2;
-        }
-
-        return 1;
-      default:
-        return 0;
+    if (c == '\n') {
+      return 1;
     }
+
+    if (c == '\r') {
+      ++offset;
+
+      if ((position + offset != end || readInput())
+          && buffer[position + offset] == '\n') {
+        return 2;
+      }
+
+      return 1;
+    }
+
+    return 0;
   }
 
   private record LineInfo(int length, int lineBreakLength) {
