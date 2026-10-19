@@ -16,19 +16,18 @@ import intro.java.common.IntList;
 import intro.java.myscanner.Scanner;
 
 public class Wspp3839 {
-  private static class CountingPair {
-    public int count;
+  private static class Counter {
+    public int count = 1;
     public IntList occurences;
     public int lastLineNo;
     public int noInLine = 1;
 
-    public CountingPair(int lineNo) {
+    public Counter(int lineNo) {
       occurences = new IntList();
-      count = 1;
       lastLineNo = lineNo;
     }
   }
-  
+
   public static void main(String[] args) {
     if (args.length != 2) {
       System.err.println("Excepted 2 arguments, got " + args.length);
@@ -38,7 +37,7 @@ public class Wspp3839 {
     File inputPath = new File(args[0]);
     File outputPath = new File(args[1]);
 
-    Map<String, CountingPair> wordStats;
+    Map<String, Counter> wordStats;
 
     try {
       wordStats = analyzeFile(inputPath);
@@ -50,9 +49,9 @@ public class Wspp3839 {
     }
   }
 
-  private static Map<String, CountingPair> analyzeFile(File inputPath)
+  private static Map<String, Counter> analyzeFile(File inputPath)
       throws IOException {
-    Map<String, CountingPair> wordStats = new HashMap<>();
+    Map<String, Counter> wordStats = new HashMap<>();
 
     try (Scanner scanner = new Scanner(new FileReader(inputPath, StandardCharsets.UTF_8),
         Wspp3839::characterIsWordPart)) {
@@ -86,39 +85,39 @@ public class Wspp3839 {
         || character == '\'';
   }
 
-  private static void countWordIn(Map<String, CountingPair> wordStats, String word, int no, int lineNo) {
-    CountingPair pair;
+  private static void countWordIn(Map<String, Counter> wordStats, String word, int no, int lineNo) {
+    Counter pair;
 
     if (!wordStats.containsKey(word)) {
-      wordStats.put(word, new CountingPair(lineNo));
+      wordStats.put(word, new Counter(lineNo));
       return;
     }
 
     pair = wordStats.get(word);
-    
+
     if (lineNo != pair.lastLineNo) {
       pair.noInLine = 1;
       pair.lastLineNo = lineNo;
     } else {
       ++pair.noInLine;
     }
-    
+
     if (pair.noInLine % 2 == 0) {
       pair.occurences.add(no);
     }
-    
+
     ++pair.count;
   }
 
-  private static void outputWordStats(Map<String, CountingPair> wordStats, File outputPath)
+  private static void outputWordStats(Map<String, Counter> wordStats, File outputPath)
       throws IOException {
-    List<Map.Entry<String, CountingPair>> entries = new ArrayList<>(wordStats.entrySet());
+    List<Map.Entry<String, Counter>> entries = new ArrayList<>(wordStats.entrySet());
 
     entries.sort((left, right) -> -left.getKey().compareTo(right.getKey()));
 
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputPath, StandardCharsets.UTF_8))) {
-      for (Map.Entry<String, CountingPair> entry : entries) {
-        CountingPair pair = entry.getValue();
+      for (Map.Entry<String, Counter> entry : entries) {
+        Counter pair = entry.getValue();
         IntList occurences = pair.occurences;
         writer.write(entry.getKey() + " " + pair.count);
 
