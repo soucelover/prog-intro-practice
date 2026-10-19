@@ -5,14 +5,14 @@ import java.util.SequencedCollection;
 
 // Immutable
 public class Paragraph implements MarkdownSerializable {
-  private SequencedCollection<InlineElement> elements;
+  private final SequencedCollection<InlineElement> elements;
 
   public Paragraph() {
     elements = List.of();
   }
 
   public Paragraph(SequencedCollection<InlineElement> elements) {
-    this.elements = elements;
+    this.elements = List.copyOf(elements);
   }
 
   @Override
