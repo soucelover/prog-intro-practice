@@ -14,9 +14,31 @@ public final class MarkupTest {
     private static final Consumer<TestCounter> MARKDOWN
             = MarkupTest.variant("Markdown", "&<", "", "&>", "", "<", "", ">", "");
 
+    // === 41-49
+    private static final Consumer<TestCounter> TEX_INFO = MarkupTest.variant(
+            "TexInfo",
+            "&<", "@par ", "&>", "",
+            "*<", "@emph{", "*>", "}",
+            "__<", "@strong{", "__>", "}",
+            "~<", "@strike{", "~>", "}"
+    );
+
+
+    // === 3637
+    private static final Consumer<TestCounter> BBCODE = MarkupTest.variant(
+            "BBCode",
+            "&<", "[p]", "&>", "[/p]",
+            "*<", "[i]", "*>", "[/i]",
+            "__<", "[b]", "__>", "[/b]",
+            "~<", "[s]", "~>", "[/s]"
+    );
+
     // === Common
     public static final Selector SELECTOR = new Selector(MarkupTest.class)
             .variant("Base", MARKDOWN)
+            .variant("3839", BBCODE)
+            .variant("41",   TEX_INFO)
+            .variant("42",   TEX_INFO)
             ;
 
     public static Consumer<TestCounter> variant(final String name, final String... subs) {
