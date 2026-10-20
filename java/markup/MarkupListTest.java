@@ -18,7 +18,7 @@ import java.util.stream.Stream;
  * @author Georgiy Korneev (kgeorgiy@kgeorgiy.info)
  */
 public final class MarkupListTest {
-    // === 41
+    // === 4142
     private static final Consumer<base.TestCounter> TEX_INFO = MarkupTest.variant(
             "TexInfo",
             "&<", "@par ", "&>", "",
@@ -27,9 +27,21 @@ public final class MarkupListTest {
             "~<", "@strike{", "~>", "}"
     );
 
+    // === 3637
+    private static final Consumer<base.TestCounter> BB_CODE = MarkupTest.variant(
+            "BBCode",
+            "&<", "[p]", "&>", "[/p]",
+            "*<", "[i]", "*>", "[/i]",
+            "__<", "[b]", "__>", "[/b]",
+            "~<", "[s]", "~>", "[/s]"
+    );
+
+
     // === Common
     public static final Selector SELECTOR = new Selector(MarkupListTest.class)
+            .variant("3637", BB_CODE)
             .variant("41",   TEX_INFO)
+            .variant("42",   TEX_INFO)
             ;
 
     private MarkupListTest() {
