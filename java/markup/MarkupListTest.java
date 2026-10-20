@@ -19,23 +19,28 @@ import java.util.stream.Stream;
  */
 public final class MarkupListTest {
     // === 4142
-    private static final Consumer<base.TestCounter> TEX_INFO = MarkupTest.variant(
+    private static final Consumer<TestCounter> TEX_INFO = MarkupListTest.variant(
             "TexInfo",
-            "&<", "@par ", "&>", "",
-            "*<", "@emph{", "*>", "}",
-            "__<", "@strong{", "__>", "}",
-            "~<", "@strike{", "~>", "}"
+            "<p>", "@par ", "</p>", "",
+            "<em>", "@emph{", "</em>", "}",
+            "<strong>", "@strong{", "</strong>", "}",
+            "<s>", "@strike{", "</s>", "}",
+            "<ul>", "@itemize ", "</ul>", "@end itemize ",
+            "<ol>", "@enumerate ", "</ol>", "@end enumerate ",
+            "<li>", "@item ", "</li>", ""
     );
 
-    // === 3637
-    private static final Consumer<base.TestCounter> BB_CODE = MarkupTest.variant(
+    // === 36-39
+    private static final Consumer<TestCounter> BB_CODE = MarkupListTest.variant(
             "BBCode",
-            "&<", "[p]", "&>", "[/p]",
-            "*<", "[i]", "*>", "[/i]",
-            "__<", "[b]", "__>", "[/b]",
-            "~<", "[s]", "~>", "[/s]"
+            "<p>", "[p]", "</p>", "[/p]",
+            "<em>", "[i]", "</em>", "[/i]",
+            "<strong>", "[b]", "</strong>", "[/b]",
+            "<s>", "[s]", "</s>", "[/s]",
+            "<ul>", "[list]", "</ul>", "[/list]",
+            "<ol>", "[list=1]", "</ol>", "[/list]",
+            "<li>", "[*]", "</li>", ""
     );
-
 
     // === Common
     public static final Selector SELECTOR = new Selector(MarkupListTest.class)
