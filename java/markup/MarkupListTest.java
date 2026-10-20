@@ -39,7 +39,7 @@ public final class MarkupListTest {
 
     // === Common
     public static final Selector SELECTOR = new Selector(MarkupListTest.class)
-            .variant("3637", BB_CODE)
+            .variant("3839", BB_CODE)
             .variant("41",   TEX_INFO)
             .variant("42",   TEX_INFO)
             ;
