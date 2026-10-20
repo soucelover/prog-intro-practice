@@ -6,11 +6,10 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.SequencedMap;
+import java.util.TreeMap;
 
 import intro.java.common.IntList;
 import intro.java.myscanner.Scanner;
@@ -37,7 +36,7 @@ public class Wspp3839 {
     File inputPath = new File(args[0]);
     File outputPath = new File(args[1]);
 
-    Map<String, Counter> wordStats;
+    SequencedMap<String, Counter> wordStats;
 
     try {
       wordStats = analyzeFile(inputPath);
@@ -49,9 +48,9 @@ public class Wspp3839 {
     }
   }
 
-  private static Map<String, Counter> analyzeFile(File inputPath)
+  private static SequencedMap<String, Counter> analyzeFile(File inputPath)
       throws IOException {
-    Map<String, Counter> wordStats = new HashMap<>();
+    SequencedMap<String, Counter> wordStats = new TreeMap<>((left, right) -> -left.compareTo(right));
 
     try (Scanner scanner = new Scanner(new FileReader(inputPath, StandardCharsets.UTF_8),
         Wspp3839::characterIsWordPart)) {
@@ -109,14 +108,10 @@ public class Wspp3839 {
     ++pair.count;
   }
 
-  private static void outputWordStats(Map<String, Counter> wordStats, File outputPath)
+  private static void outputWordStats(SequencedMap<String, Counter> wordStats, File outputPath)
       throws IOException {
-    List<Map.Entry<String, Counter>> entries = new ArrayList<>(wordStats.entrySet());
-
-    entries.sort((left, right) -> -left.getKey().compareTo(right.getKey()));
-
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputPath, StandardCharsets.UTF_8))) {
-      for (Map.Entry<String, Counter> entry : entries) {
+      for (Map.Entry<String, Counter> entry : wordStats.sequencedEntrySet()) {
         Counter pair = entry.getValue();
         IntList occurences = pair.occurences;
         writer.write(entry.getKey() + " " + pair.count);
