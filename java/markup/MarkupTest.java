@@ -14,7 +14,7 @@ public final class MarkupTest {
     private static final Consumer<TestCounter> MARKDOWN
             = MarkupTest.variant("Markdown", "&<", "", "&>", "", "<", "", ">", "");
 
-    // === 41, 42
+    // === 41-49
     private static final Consumer<TestCounter> TEX_INFO = MarkupTest.variant(
             "TexInfo",
             "&<", "@par ", "&>", "",
@@ -23,8 +23,7 @@ public final class MarkupTest {
             "~<", "@strike{", "~>", "}"
     );
 
-
-    // === 3839
+    // === 36-39
     private static final Consumer<TestCounter> BBCODE = MarkupTest.variant(
             "BBCode",
             "&<", "[p]", "&>", "[/p]",
@@ -36,6 +35,7 @@ public final class MarkupTest {
     // === Common
     public static final Selector SELECTOR = new Selector(MarkupTest.class)
             .variant("Base", MARKDOWN)
+            .variant("3637", BBCODE)
             .variant("3839", BBCODE)
             .variant("41",   TEX_INFO)
             .variant("42",   TEX_INFO)
