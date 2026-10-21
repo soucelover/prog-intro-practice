@@ -39,6 +39,7 @@ public final class MarkupTest {
             .variant("3839", BBCODE)
             .variant("41",   TEX_INFO)
             .variant("42",   TEX_INFO)
+            .variant("48",   TEX_INFO)
             ;
 
     public static Consumer<TestCounter> variant(final String name, final String... subs) {
