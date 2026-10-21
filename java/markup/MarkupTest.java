@@ -40,7 +40,8 @@ public final class MarkupTest {
             .variant("41",   TEX_INFO)
             .variant("42",   TEX_INFO)
             .variant("48",   TEX_INFO)
-            ;
+            .variant("4749", TEX_INFO)
+                        ;
 
     public static Consumer<TestCounter> variant(final String name, final String... subs) {
         return MarkupTester.variant(MarkupTest::test, name, subs);
