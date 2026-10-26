@@ -78,17 +78,12 @@ public class FastReverse3839 {
   }
 
   private static int parseDecHexInt(String token) {
-    int offset = 0;
-
-    if (token.startsWith("0x", offset) || token.startsWith("0X", offset)) {
-      offset = 2;
-    } else if (token.startsWith("0", offset) && token.length() > 1 + offset) {
-      offset = 1;
-    } else { // Decimal
-      return Integer.parseInt(token, 10);
+    if (token.startsWith("0x") || token.startsWith("0X")) {
+      return Integer.parseUnsignedInt(token, 2, token.length(), 16);
     }
 
-    return Integer.parseUnsignedInt(token, offset, token.length(), 16);
+    // Decimal
+    return Integer.parseInt(token, 10);
   }
 
   private static boolean isTokenPart(char character) {
