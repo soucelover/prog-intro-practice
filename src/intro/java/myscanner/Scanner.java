@@ -87,6 +87,10 @@ public class Scanner implements Closeable {
     }
   }
 
+  private boolean reachedEnd() {
+    return position == buffer.length() && state == State.EOF;
+  }
+
   private char charAt(int offset) {
     return buffer.charAt(position + offset);
   }
@@ -125,54 +129,46 @@ public class Scanner implements Closeable {
     return position + offset < buffer.length();
   }
 
-  private boolean ensureAvailable() throws IOException {
-    return ensureAvailable(0);
-  }
-
   // Token Parsing
 
   public static boolean characterIsTokenPart(char character) {
     return !Character.isWhitespace(character);
   }
 
-  /**
-   * How many characters to skip before next token occurs?
-   */
-  private int nextSkippedCount(boolean untilLineBreak) throws IOException {
-    // assume state is 'good'
-    int count = 0;
+  private int findNextTokenStart(boolean untilLineBreak)
+      throws IOException {
+    int offset = 0;
 
-    while (true) {
-      if (!ensureAvailable(count) || tokenPredicate.test(charAt(count))) {
-        return count;
+    while (ensureAvailable(offset)) {
+      if (tokenPredicate.test(buffer.charAt(position + offset))) {
+        return offset;
       }
 
-      if (untilLineBreak && findLineBreakLength(count) > 0) {
+      if (untilLineBreak && findLineBreakLength(offset) > 0) {
         return -1;
       }
 
-      ++count;
+      ++offset;
     }
+
+    // EOF was reached after skipping the remaining characters.
+    return offset;
   }
 
   public boolean hasNext(boolean untilLineBreak) throws IOException {
     ensureGoodState();
 
-    if (!ensureAvailable()) {
+    if (!reachedEnd()) {
       return false;
     }
 
-    final int startOffset = nextSkippedCount(untilLineBreak);
+    final int startOffset = findNextTokenStart(untilLineBreak);
 
-    if (untilLineBreak && startOffset == -1) {
+    if (startOffset == -1) {
       return true;
     }
 
-    if (!ensureAvailable(startOffset)) {
-      return false;
-    }
-
-    return tokenPredicate.test(charAt(startOffset));
+    return ensureAvailable(startOffset) && tokenPredicate.test(charAt(startOffset));
   }
 
   public boolean hasNext() throws IOException {
@@ -191,9 +187,7 @@ public class Scanner implements Closeable {
 
   private TokenInfo findNextToken(boolean untilLineBreak) throws IOException {
     // assume state is 'good'
-    final int startOffset;
-
-    startOffset = nextSkippedCount(untilLineBreak);
+    final int startOffset = findNextTokenStart(untilLineBreak);
 
     if (startOffset == -1) {
       return null;
@@ -201,24 +195,18 @@ public class Scanner implements Closeable {
 
     int length = 0;
 
-    while (true) {
-      if (!ensureAvailable(startOffset + length)
-          || !tokenPredicate.test(charAt(startOffset + length))) {
-        return new TokenInfo(startOffset, length);
-      }
-
+    while (ensureAvailable(startOffset + length)
+        && tokenPredicate.test(buffer.charAt(position + startOffset + length))) {
       ++length;
     }
-  }
 
-  private TokenInfo findNextToken() throws IOException {
-    return findNextToken(false);
+    return new TokenInfo(startOffset, length);
   }
 
   public String next(boolean untilLineBreak) throws IOException {
     ensureGoodState();
 
-    if (!ensureAvailable()) {
+    if (reachedEnd()) {
       throw new NoSuchElementException("No more tokens to read.");
     }
 
@@ -248,11 +236,11 @@ public class Scanner implements Closeable {
   public boolean hasNextInt() throws IOException {
     ensureGoodState();
 
-    if (!ensureAvailable()) {
+    if (reachedEnd()) {
       return false;
     }
 
-    TokenInfo token = findNextToken();
+    TokenInfo token = findNextToken(false);
 
     if (token.length == 0) {
       return false;
@@ -269,11 +257,11 @@ public class Scanner implements Closeable {
   public int nextInt() throws IOException {
     ensureGoodState();
 
-    if (!ensureAvailable()) {
+    if (reachedEnd()) {
       throw new NoSuchElementException("No more tokens to read.");
     }
 
-    TokenInfo token = findNextToken();
+    TokenInfo token = findNextToken(false);
 
     if (token.length == 0) {
       throw new NoSuchElementException("No more tokens to read.");
@@ -294,11 +282,7 @@ public class Scanner implements Closeable {
   public boolean hasNextLine() throws IOException {
     ensureGoodState();
 
-    if (position < buffer.length()) {
-      return true;
-    }
-
-    return ensureAvailable();
+    return ensureAvailable(0);
   }
 
   private int findLineBreakLength(int offset) throws IOException {
@@ -354,7 +338,7 @@ public class Scanner implements Closeable {
   public String nextLine() throws IOException {
     ensureGoodState();
 
-    if (!ensureAvailable()) {
+    if (reachedEnd()) {
       throw new NoSuchElementException("No more lines to read.");
     }
 
@@ -373,7 +357,7 @@ public class Scanner implements Closeable {
   public void consumeLineBreak() throws IOException {
     ensureGoodState();
 
-    if (!ensureAvailable()) {
+    if (reachedEnd()) {
       return;
     }
 
