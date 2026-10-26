@@ -141,7 +141,7 @@ public class Scanner implements Closeable {
         return offset;
       }
 
-      if (untilLineBreak && findLineBreakLength(offset) > 0) {
+      if (untilLineBreak && isLineBreak(offset)) {
         return -1;
       }
 
@@ -278,8 +278,15 @@ public class Scanner implements Closeable {
 
   // Line Parsing Helpers
 
+  private boolean isLineBreak(int offset) throws IOException {
+    // Assume char is available at offset
+    char c = charAt(offset);
+
+    return c == '\n' || c == '\r';
+  }
+
   private int findLineBreakLength(int offset) throws IOException {
-    // Assume position + offset < buffer.length() and state is 'good'
+    // Assume char is available at offset and state is 'good'
     char c = charAt(offset);
 
     if (c == '\n') {
