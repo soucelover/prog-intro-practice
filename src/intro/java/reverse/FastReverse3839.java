@@ -22,7 +22,7 @@ public class FastReverse3839 {
     try {
       matrix = parseNumbers(scanner);
     } catch (IOException exc) {
-      System.err.println("Couldn't read from the input.");
+      System.err.println("Couldn't read from the input. Reason: " + exc.getMessage());
       return;
     }
 
