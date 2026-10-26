@@ -1,6 +1,6 @@
 package intro.java.markup;
 
-import java.util.SequencedCollection;
+import java.util.List;
 
 public class Strong extends MarkupElement {
   static private final String DELIMITER = "__";
@@ -10,7 +10,7 @@ public class Strong extends MarkupElement {
     super(item, DELIMITER, BBCODE_TAG);
   }
 
-  public Strong(SequencedCollection<InlineElement> items) {
+  public Strong(List<InlineElement> items) {
     super(items, DELIMITER, BBCODE_TAG);
   }
 }

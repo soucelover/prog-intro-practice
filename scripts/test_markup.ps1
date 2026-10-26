@@ -4,7 +4,7 @@
 param (
     [switch]$ForDebug,
     [Parameter(ValueFromRemainingArguments)]
-    [object[]]$Arguments = @("Base")
+    [object[]]$Arguments = @("3839")
 )
 
 $ErrorActionPreference = "Stop"
@@ -12,7 +12,7 @@ Set-StrictMode -Version Latest
 $PSNativeCommandUseErrorActionPreference = $true
 
 $JarFile = .\scripts\build.ps1 -Name MarkupTest -ForDebug:$ForDebug
-$Class = "intro.java.markup.MarkupTest"
+$Class = "intro.java.markup.MarkupListTest"
 
 Write-Host "Launching the application...`n"
 

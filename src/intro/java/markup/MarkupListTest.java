@@ -177,7 +177,7 @@ public final class MarkupListTest {
 
     private static Map<String, Class<?>> loadClasses(final String... names) {
         return Arrays.stream(names)
-                .collect(Collectors.toUnmodifiableMap(Function.identity(), name -> loadClass("markup." + name)));
+                .collect(Collectors.toUnmodifiableMap(Function.identity(), name -> loadClass("intro.java.markup." + name)));
     }
 
     private static void checkTypes() {

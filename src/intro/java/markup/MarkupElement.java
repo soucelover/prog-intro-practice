@@ -45,8 +45,8 @@ public abstract class MarkupElement implements InlineElement {
       item.toBBCode(dst);
     }
 
-    dst.append("[");
+    dst.append("[/");
     dst.append(bbCodeTag);
-    dst.append("/]");
+    dst.append("]");
   }
 }

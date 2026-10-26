@@ -1,6 +1,6 @@
 package intro.java.markup;
 
-import java.util.SequencedCollection;
+import java.util.List;
 
 public class Emphasis extends MarkupElement {
   static private final String DELIMITER = "*";
@@ -10,7 +10,7 @@ public class Emphasis extends MarkupElement {
     super(item, DELIMITER, BBCODE_TAG);
   }
 
-  public Emphasis(SequencedCollection<InlineElement> items) {
+  public Emphasis(List<InlineElement> items) {
     super(items, DELIMITER, BBCODE_TAG);
   }
 }

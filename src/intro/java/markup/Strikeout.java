@@ -1,6 +1,6 @@
 package intro.java.markup;
 
-import java.util.SequencedCollection;
+import java.util.List;
 
 public class Strikeout extends MarkupElement {
   static private final String DELIMITER = "~";
@@ -10,7 +10,7 @@ public class Strikeout extends MarkupElement {
     super(item, DELIMITER, BBCODE_TAG);
   }
 
-  public Strikeout(SequencedCollection<InlineElement> items) {
+  public Strikeout(List<InlineElement> items) {
     super(items, DELIMITER, BBCODE_TAG);
   }
 }

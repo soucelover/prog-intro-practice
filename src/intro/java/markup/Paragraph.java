@@ -1,17 +1,16 @@
 package intro.java.markup;
 
 import java.util.List;
-import java.util.SequencedCollection;
 
 // Immutable
-public class Paragraph implements MarkdownSerializable, BBCodeSerializable {
-  private final SequencedCollection<InlineElement> elements;
+public class Paragraph implements MarkdownSerializable, BBCodeContainer {
+  private final List<InlineElement> elements;
 
   public Paragraph() {
     elements = List.of();
   }
 
-  public Paragraph(SequencedCollection<InlineElement> elements) {
+  public Paragraph(List<InlineElement> elements) {
     this.elements = List.copyOf(elements);
   }
 
@@ -24,8 +23,12 @@ public class Paragraph implements MarkdownSerializable, BBCodeSerializable {
 
   @Override
   public void toBBCode(StringBuilder dst) {
+    dst.append("[p]");
+
     for (InlineElement element : elements) {
       element.toBBCode(dst);
     }
+
+    dst.append("[/p]");
   }
 }
