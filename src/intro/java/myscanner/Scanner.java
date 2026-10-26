@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.InputMismatchException;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 // UTF-8 is used with all constructors explicitly
 public class Scanner implements Closeable {
@@ -42,8 +41,6 @@ public class Scanner implements Closeable {
   private final CharPredicate tokenPredicate;
 
   public Scanner(Reader reader, CharPredicate tokenPredicate) {
-    Objects.requireNonNull(reader);
-
     this.reader = reader;
 
     buffer = new StringBuilder();
@@ -140,7 +137,7 @@ public class Scanner implements Closeable {
     int offset = 0;
 
     while (ensureAvailable(offset)) {
-      if (tokenPredicate.test(buffer.charAt(position + offset))) {
+      if (tokenPredicate.test(charAt(offset))) {
         return offset;
       }
 
@@ -196,7 +193,7 @@ public class Scanner implements Closeable {
     int length = 0;
 
     while (ensureAvailable(startOffset + length)
-        && tokenPredicate.test(buffer.charAt(position + startOffset + length))) {
+        && tokenPredicate.test(charAt(startOffset + length))) {
       ++length;
     }
 
@@ -287,23 +284,21 @@ public class Scanner implements Closeable {
 
   private int findLineBreakLength(int offset) throws IOException {
     // Assume position + offset < buffer.length() and state is 'good'
-    char c = buffer.charAt(position + offset);
+    char c = charAt(offset);
 
     if (c == '\n') {
       return 1;
     }
 
-    if (c == '\r') {
-      ++offset;
-
-      if (ensureAvailable(offset) && buffer.charAt(position + offset) == '\n') {
-        return 2;
-      }
-
-      return 1;
+    if (c != '\r') {
+      return 0;
     }
 
-    return 0;
+    if (ensureAvailable(offset + 1) && charAt(offset + 1) == '\n') {
+      return 2;
+    }
+
+    return 1;
   }
 
   private record LineInfo(int length, int lineBreakLength) {
@@ -313,26 +308,19 @@ public class Scanner implements Closeable {
   }
 
   private LineInfo findNextLine() throws IOException {
-    // assume state is 'good'
     int length = 0;
 
-    while (true) {
-      if (!ensureAvailable(length)) {
-        if (length == 0) {
-          return null;
-        }
+    while (ensureAvailable(length)) {
+      int breakLength = findLineBreakLength(length);
 
-        return new LineInfo(length, 0);
-      }
-
-      int lineBreakLength = findLineBreakLength(length);
-
-      if (lineBreakLength > 0) {
-        return new LineInfo(length, lineBreakLength);
+      if (breakLength > 0) {
+        return new LineInfo(length, breakLength);
       }
 
       ++length;
     }
+
+    return new LineInfo(length, 0);
   }
 
   public String nextLine() throws IOException {
@@ -344,7 +332,7 @@ public class Scanner implements Closeable {
 
     LineInfo lineInfo = findNextLine();
 
-    if (lineInfo == null) {
+    if (lineInfo.length == 0 && lineInfo.lineBreakLength == 0) {
       throw new NoSuchElementException("No more lines to read.");
     }
 
@@ -361,22 +349,7 @@ public class Scanner implements Closeable {
       return;
     }
 
-    int offset = 0;
-
-    while (true) {
-      if (!ensureAvailable(offset)) {
-        position += offset;
-        return;
-      }
-
-      int lineBreakLength = findLineBreakLength(offset);
-
-      if (lineBreakLength > 0) {
-        position += offset + lineBreakLength;
-        return;
-      }
-
-      ++offset;
-    }
+    LineInfo boundary = findNextLine();
+    position += boundary.fullLength();
   }
 }
