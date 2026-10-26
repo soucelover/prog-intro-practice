@@ -10,4 +10,8 @@ public class Text implements InlineElement {
   public void toMarkdown(StringBuilder dst) {
     dst.append(text);
   }
+
+  public void toBBCode(StringBuilder dst) {
+    dst.append(text);
+  }
 }

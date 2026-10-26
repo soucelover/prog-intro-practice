@@ -23,8 +23,7 @@ public final class MarkupTest {
             "~<", "@strike{", "~>", "}"
     );
 
-
-    // === 3637
+    // === 36-39
     private static final Consumer<TestCounter> BBCODE = MarkupTest.variant(
             "BBCode",
             "&<", "[p]", "&>", "[/p]",
@@ -33,12 +32,26 @@ public final class MarkupTest {
             "~<", "[s]", "~>", "[/s]"
     );
 
+    // === 32-33
+    private static final Consumer<TestCounter> DOCBOOK = MarkupTest.variant(
+            "DocBook",
+            "&<", "<para>", "&>", "</para>",
+            "*<", "<emphasis>", "*>", "</emphasis>",
+            "__<", "<emphasis role='bold'>", "__>", "</emphasis>",
+            "~<", "<emphasis role='strikeout'>", "~>", "</emphasis>"
+    );
+
+
     // === Common
     public static final Selector SELECTOR = new Selector(MarkupTest.class)
             .variant("Base", MARKDOWN)
+            .variant("3233", DOCBOOK)
+            .variant("3637", BBCODE)
             .variant("3839", BBCODE)
             .variant("41",   TEX_INFO)
             .variant("42",   TEX_INFO)
+            .variant("48",   TEX_INFO)
+            .variant("4749", TEX_INFO)
             ;
 
     public static Consumer<TestCounter> variant(final String name, final String... subs) {
